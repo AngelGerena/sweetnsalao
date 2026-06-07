@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sweet &amp; Salao Food Truck | Puerto Rican Eats in Deltona, FL</title>
+    <meta name="description" content="Sweet & Salao by Chef Carmen LLC. Loaded fries, churrasco, seafood cups, pastelillos, flan, and more. Order pickup or DoorDash delivery in Deltona, FL.">
+    <meta property="og:title" content="Sweet & Salao Food Truck">
+    <meta property="og:description" content="Puerto Rican sweets, savory plates, seafood cups, and street-food favorites in Deltona, FL.">
+    <meta property="og:image" content="/assets/surf-turf-loaded-fries.jpg">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#ff2e88">
+    <link rel="icon" type="image/png" href="/assets/sweet-salao-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,600&family=Outfit:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module" src="/script.js"></script>
+  </head>
+  <body>
+    <!-- Closed banner (shown when away) -->
+    <div class="closed-banner" id="closed-banner" hidden>
+      <span class="closed-icon">🚧</span>
+      <div class="closed-banner-text">
+        <strong id="closed-banner-title"></strong>
+        <span id="closed-banner-back"></span>
+      </div>
+    </div>
+
+    <!-- Closed overlay (shown on arrival when away) -->
+    <div class="closed-overlay" id="closed-overlay" hidden>
+      <div class="closed-modal">
+        <img class="closed-logo" src="/assets/sweet-salao-logo.png" alt="Sweet & Salao">
+        <h2 id="closed-modal-title"></h2>
+        <p id="closed-modal-msg"></p>
+        <p class="closed-back" id="closed-modal-back"></p>
+        <button class="btn btn-primary" id="closed-modal-close" type="button"></button>
+      </div>
+    </div>
+
+    <!-- Top order bar -->
+    <div class="order-bar">
+      <span class="order-bar-text" data-i18n="orderBarText">Now serving Deltona &amp; nearby events</span>
+      <a class="dd-pill" id="dd-topbar" href="#" target="_blank" rel="noopener">
+        <span class="dd-dot"></span> <span data-i18n="orderOnDoordash">Order on DoorDash</span>
+      </a>
+    </div>
+
+    <header class="site-header" id="site-header">
+      <a class="brand" href="#top" aria-label="Sweet and Salao home">
+        <img id="nav-logo" src="/assets/sweet-salao-logo.png" alt="Sweet & Salao logo">
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#menu" data-i18n="navMenu">Menu</a>
+        <a href="#order" data-i18n="navOrder">Order</a>
+        <a href="#story" data-i18n="navAbout">About</a>
+        <a class="nav-dd" id="dd-nav" href="#" target="_blank" rel="noopener">DoorDash</a>
+      </nav>
+      <div class="lang-toggle" id="lang-toggle">
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="es">ES</button>
+      </div>
+      <button class="cart-toggle" id="cart-toggle" aria-label="Open cart">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zM7.17 14.75l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49a1 1 0 0 0-.87-1.48H6.21l-.94-2H2v2h2l3.6 7.59-1.35 2.44C5.52 15.37 6.48 17 8 17h12v-2H8.42a.25.25 0 0 1-.22-.37z"/></svg>
+        <span class="cart-count" id="cart-count">0</span>
+      </button>
+    </header>
+
+    <main id="top">
+      <!-- HERO -->
+      <section class="hero" id="hero">
+        <div class="hero-bg" id="hero-bg"></div>
+        <div class="hero-scrim"></div>
+        <div class="hero-content">
+          <img class="hero-logo" id="hero-logo" src="/assets/sweet-salao-logo.png" alt="Sweet & Salao by Chef Carmen LLC logo">
+          <p class="eyebrow" id="location">Deltona, FL &amp; surrounding areas</p>
+          <h1 id="business-name">Sweet &amp; Salao</h1>
+          <p class="hero-tag" id="tagline">Puerto Rican sweets, savory plates, seafood cups, and street-food favorites.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#menu" data-i18n="viewMenu">View the Menu</a>
+            <a class="btn btn-dd" id="dd-hero" href="#" target="_blank" rel="noopener">
+              <span class="dd-dot"></span> <span data-i18n="orderOnDoordash">Order on DoorDash</span>
+            </a>
+          </div>
+          <p class="hero-verse" id="hero-verse">Todo lo puedo en Cristo que me fortalece. — Filipenses 4:13</p>
+        </div>
+        <div class="hero-fade"></div>
+      </section>
+
+      <!-- MARQUEE -->
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-track" id="marquee-track"></div>
+      </div>
+
+      <!-- INFO STRIP -->
+      <section class="info-strip">
+        <div class="info-card">
+          <span class="info-icon">🕒</span>
+          <div>
+            <p class="info-label" data-i18n="sfHours">Hours</p>
+            <p class="info-value" id="hours">Follow us for current truck hours</p>
+          </div>
+        </div>
+        <div class="info-card">
+          <span class="info-icon">📍</span>
+          <div>
+            <p class="info-label" data-i18n="sfFind">Find the truck</p>
+            <p class="info-value" id="location-2">Deltona, FL &amp; nearby events</p>
+          </div>
+        </div>
+        <div class="info-card">
+          <span class="info-icon">📞</span>
+          <div>
+            <p class="info-label" data-i18n="sfCall">Call to order</p>
+            <p class="info-value"><a id="phone-link" href="tel:3862156720">386-215-6720</a></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- MENU -->
+      <section class="section" id="menu">
+        <div class="section-head">
+          <p class="eyebrow center" data-i18n="elMenu">El Menú</p>
+          <h2 id="featured-title">Straight from the truck</h2>
+          <p class="section-sub" data-i18n="menuTapHint">Tap a category to explore. Add what you love and check out in seconds.</p>
+        </div>
+        <div class="filters" id="category-filters" aria-label="Menu filters"></div>
+        <div class="menu-grid" id="menu-grid"></div>
+      </section>
+
+      <!-- ORDER / CHECKOUT -->
+      <section class="section order-section" id="order">
+        <div class="order-grid">
+          <div class="order-info">
+            <p class="eyebrow">Checkout</p>
+            <h2 data-i18n="buildOrder">Build your order</h2>
+            <p class="order-lead">Choose pickup at the window or delivery through DoorDash. For pickup, send payment by Zelle or Cash App and we'll text when it's ready.</p>
+
+            <a class="btn btn-dd btn-block" id="dd-order" href="#" target="_blank" rel="noopener">
+              <span class="dd-dot"></span> <span data-i18n="orderFullDoordash">Order the full menu on DoorDash</span>
+            </a>
+
+            <div class="payment-box">
+              <h3 data-i18n="paymentForPickup">Payment for pickup</h3>
+              <div class="pay-row"><span>Zelle</span><strong id="zelle-handle"></strong></div>
+              <div class="pay-row"><span>Cash App</span><strong id="cashapp-handle"></strong></div>
+              <p class="delivery-note" id="delivery-note"></p>
+            </div>
+          </div>
+
+          <aside class="cart-panel" id="cart-panel" aria-label="Shopping cart">
+            <div class="cart-head">
+              <h3 data-i18n="yourOrder">Your order</h3>
+              <button class="cart-close" id="cart-close" aria-label="Close cart">×</button>
+            </div>
+            <div id="cart-items" class="cart-items"></div>
+            <div class="cart-total">
+              <span data-i18n="total">Total</span>
+              <strong id="cart-total">$0.00</strong>
+            </div>
+
+            <div class="fulfill-choice" role="radiogroup" aria-label="How would you like your order?">
+              <p class="fulfill-q" data-i18n="howOrder">How would you like your order?</p>
+              <div class="fulfillment">
+                <label class="radio-card">
+                  <input type="radio" name="fulfillment" value="pickup" checked>
+                  <span class="radio-body"><strong data-i18n="pickup">Pickup</strong><small data-i18n="pickupSub">At the truck window</small></span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="fulfillment" value="doordash">
+                  <span class="radio-body"><strong data-i18n="doordashDelivery">DoorDash</strong><small data-i18n="doordashSub">Delivered to you</small></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- PICKUP: collect details here -->
+            <form id="order-form" class="order-form" data-mode="pickup">
+              <input name="name" data-i18n-ph="yourName" placeholder="Your name" autocomplete="name" required>
+              <input name="phone" data-i18n-ph="phoneNumber" placeholder="Phone number" autocomplete="tel" inputmode="tel" required>
+              <textarea name="notes" data-i18n-ph="orderNotes" placeholder="Order notes (sides, prep style, allergies)"></textarea>
+
+              <p class="pay-q" data-i18n="howPay">How will you pay?</p>
+              <div class="pay-choice">
+                <label class="radio-card">
+                  <input type="radio" name="payment" value="zelle" checked>
+                  <span class="radio-body"><strong>Zelle</strong><small>386-215-6720</small></span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="payment" value="cashapp">
+                  <span class="radio-body"><strong>Cash App</strong><small>$SweetSalao</small></span>
+                </label>
+              </div>
+
+              <button class="btn btn-primary btn-block" type="submit" data-i18n="placePickup">Place Pickup Order</button>
+              <p class="pay-hint" data-i18n="payHintCook">We confirm payment before cooking. Next step: send your payment and message us your order so we can start.</p>
+            </form>
+
+            <!-- PICKUP: post-submit payment + send step -->
+            <div id="pay-step" class="pay-step" hidden>
+              <div class="pay-step-head">
+                <span class="pay-check">✓</span>
+                <div>
+                  <strong data-i18n="orderReady">Order ready to send</strong>
+                  <small id="pay-step-id"></small>
+                </div>
+              </div>
+              <p class="pay-step-copy" data-i18n="twoSteps">Two quick steps so Chef Carmen can start cooking:</p>
+
+              <div class="pay-block" id="pay-block-zelle" hidden>
+                <p class="pay-step-num" data-i18n="payByZelle">1. Pay by Zelle</p>
+                <div class="qr-wrap">
+                  <img src="/assets/qr-zelle.png" alt="Zelle QR code" class="qr-img">
+                  <div class="qr-info">
+                    <span>Send <strong id="pay-amount-zelle"></strong> to</span>
+                    <strong class="pay-handle">386-215-6720</strong>
+                    <small>Scan the code or use the number in your bank app.</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pay-block" id="pay-block-cashapp" hidden>
+                <p class="pay-step-num" data-i18n="payByCashapp">1. Pay by Cash App</p>
+                <div class="qr-wrap">
+                  <img src="/assets/qr-cashapp.png" alt="Cash App QR code" class="qr-img">
+                  <div class="qr-info">
+                    <span>Send <strong id="pay-amount-cashapp"></strong> to</span>
+                    <a class="pay-handle" id="cashapp-link" href="https://cash.app/$SweetSalao" target="_blank" rel="noopener">$SweetSalao</a>
+                    <small>Scan the code or tap the tag to open Cash App.</small>
+                  </div>
+                </div>
+              </div>
+
+              <p class="pay-step-num" data-i18n="step2Send">2. Send your order to confirm</p>
+              <a class="btn btn-wa btn-block" id="wa-send-1" href="#" target="_blank" rel="noopener">
+                <span class="wa-icon">✆</span> <span data-i18n="sendWhatsapp">Send order on WhatsApp</span>
+              </a>
+              <a class="btn btn-wa-alt btn-block" id="wa-send-2" href="#" target="_blank" rel="noopener" data-i18n="sendBackup">
+                Send to backup line
+              </a>
+              <button class="btn btn-secondary btn-block" id="pay-step-done" type="button" data-i18n="startNew">Start a new order</button>
+            </div>
+
+            <!-- DOORDASH: hand off to DoorDash -->
+            <div id="dd-panel" class="dd-panel" hidden>
+              <p class="dd-copy" data-i18n="ddHandles">DoorDash handles your name, address, and payment on their secure site. Tap below to send your order to the Sweet &amp; Salao DoorDash page.</p>
+              <a class="btn btn-dd btn-block" id="dd-continue" href="#" target="_blank" rel="noopener">
+                <span class="dd-dot"></span> <span data-i18n="continueDoordash">Continue on DoorDash</span>
+              </a>
+            </div>
+
+            <p class="fine-print" id="order-status" role="status"></p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- STORY -->
+      <section class="section story" id="story">
+        <div class="story-text">
+          <p class="eyebrow">About</p>
+          <h2 id="story-title">Sweet, salao, and made by Chef Carmen</h2>
+          <p id="story-text">From pastelillos and pinchos to churrasco, seafood cups, flan, and natural juices, the truck brings a full comfort-food menu to Deltona and nearby events.</p>
+          <p class="verse-block" id="verse-block">"Todo lo puedo en Cristo que me fortalece."<span>Filipenses 4:13</span></p>
+          <div class="story-actions">
+            <a class="btn btn-secondary" id="contact-link" href="mailto:orders@sweetandsalao.com" data-i18n="bookTruck">Book the Truck</a>
+            <a class="btn btn-dd" id="dd-story" href="#" target="_blank" rel="noopener"><span class="dd-dot"></span> DoorDash</a>
+          </div>
+        </div>
+        <div class="gallery" id="gallery"></div>
+      </section>
+
+      <div class="back-to-top-wrap">
+        <a href="#top" class="back-to-top" aria-label="Back to top">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+        </a>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <img class="footer-logo" src="/assets/sweet-salao-logo.png" alt="Sweet & Salao">
+      <div class="footer-info">
+        <span class="footer-copy">Copyright 2026 - Sweet &amp; Salao - All Rights Reserved.</span>
+        <span class="footer-credit">Site by <a href="https://www.finessemedia.pro" target="_blank" rel="noopener">Finesse Media LLC</a></span>
+      </div>
+      <a class="footer-admin" href="/admin.html">Owner Login</a>
+    </footer>
+
+    <!-- Gallery lightbox -->
+    <div class="lightbox" id="lightbox" hidden>
+      <button class="lb-close" id="lb-close" aria-label="Close">&times;</button>
+      <button class="lb-nav lb-prev" id="lb-prev" aria-label="Previous">&#8249;</button>
+      <figure class="lb-figure">
+        <img id="lb-image" src="" alt="Sweet & Salao food">
+        <figcaption class="lb-counter" id="lb-counter"></figcaption>
+      </figure>
+      <button class="lb-nav lb-next" id="lb-next" aria-label="Next">&#8250;</button>
+    </div>
+
+    <!-- Sticky mobile cart bar -->
+    <button class="sticky-cart" id="sticky-cart" hidden>
+      <span id="sticky-cart-count">0 items</span>
+      <span id="sticky-cart-total">$0.00</span>
+      <span class="sticky-cart-go">View order →</span>
+    </button>
+  </body>
+</html>

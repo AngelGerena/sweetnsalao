@@ -1,0 +1,51 @@
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/api/content"
+  to = "/.netlify/functions/content"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/login"
+  to = "/.netlify/functions/admin-login"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/logout"
+  to = "/.netlify/functions/admin-logout"
+  status = 200
+
+[[redirects]]
+  from = "/api/upload"
+  to = "/.netlify/functions/upload"
+  status = 200
+
+[[redirects]]
+  from = "/api/order"
+  to = "/.netlify/functions/order"
+  status = 200
+
+[[redirects]]
+  from = "/media/:key"
+  to = "/.netlify/functions/media/:key"
+  status = 200
+
+[[headers]]
+  for = "/admin.html"
+  [headers.values]
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/admin.js"
+  [headers.values]
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"

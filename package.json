@@ -1,0 +1,16 @@
+{
+  "name": "sweet-salao-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "netlify dev",
+    "check": "node --check netlify/functions/content.js && node --check netlify/functions/admin-login.js && node --check netlify/functions/admin-logout.js && node --check netlify/functions/upload.js && node --check netlify/functions/order.js"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^9.1.2"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.38.1"
+  }
+}
