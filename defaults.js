@@ -7,6 +7,25 @@ export const defaultContent = {
     email: "sweetandsalaobychefcarmen@gmail.com",
     location: "Deltona, FL and surrounding areas",
     hours: "Follow us for current truck hours and event locations",
+    hoursSchedule: {
+      mon: "Closed",
+      tue: "Closed",
+      wed: "Closed",
+      thu: "Closed",
+      fri: "12–9 PM",
+      sat: "12–9 PM",
+      sun: "Closed"
+    },
+    address: {
+      placedAt: "Advance Auto Parts",
+      street: "1665 Providence Blvd",
+      cityStateZip: "Deltona, FL 32725",
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=1665+Providence+Blvd+Deltona+FL+32725"
+    },
+    social: {
+      facebook: "https://www.facebook.com/SweetandSalaobyCarmen",
+      instagram: "https://www.instagram.com/sweetandsalaobychefcarmen/"
+    },
     verse: "Todo lo puedo en Cristo que me fortalece. Filipenses 4:13",
     logoImage: "/assets/sweet-salao-logo.png",
     heroImage: "/assets/churrasco-loaded-fries.jpg"
@@ -32,6 +51,16 @@ export const defaultContent = {
     featuredTitle: "Straight from the truck",
     storyTitle: "Sweet, salao, and made by Chef Carmen",
     storyText: "From pastelillos and pinchos to churrasco, seafood cups, flan, and natural juices, the truck brings a full comfort-food menu to Deltona and nearby events. Cooked with love, seasoned with faith."
+  },
+  reviews: {
+    title: "What our guests are saying",
+    titleEs: "Lo que dicen nuestros clientes",
+    reviewUrl: "REPLACE_WITH_GOOGLE_REVIEW_LINK",
+    items: [
+      { name: "Lily SB", text: "Five stars across the board — food, service, and atmosphere. We will be back!", text_es: "Cinco estrellas en todo: comida, servicio y ambiente. ¡Volveremos!" },
+      { name: "Noemí Cardona Delgado", text: "Friendly and welcoming atmosphere and the food is great. La comida es buenísima y el ambiente es familiar y amigable.", text_es: "Ambiente familiar y acogedor, y la comida es excelente. La comida es buenísima y el ambiente es familiar y amigable." },
+      { name: "Local Guest", text: "Our first time ordering at Sweet & Salao and we loved it! The food is very tasty. We'll definitely return.", text_es: "Nuestra primera vez ordenando en Sweet & Salao y nos encantó. La comida está muy sabrosa. Definitivamente volveremos." }
+    ]
   },
   products: [
     { id: "chicharrones-de-pollo", name: "Chicharrones de Pollo", category: "Entrees", price: 14, description: "Crispy chicken cracklings. Includes 1 side and salad.", description_es: "Crujientes chicharrones de pollo. Incluye 1 acompañante y ensalada.", image: "/assets/chicharrones-pollo.jpg", available: true, featured: true },

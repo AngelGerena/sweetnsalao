@@ -49,7 +49,8 @@ function renderSite() {
   byId("hero-logo").src = content.business.logoImage;
   byId("business-name").textContent = content.business.name;
   byId("tagline").textContent = content.business.tagline;
-  byId("hours").textContent = content.business.hours;
+  const hoursEl = byId("hours");
+  if (hoursEl) hoursEl.textContent = content.business.hours || "";
   byId("location").textContent = content.business.location;
   byId("location-2").textContent = content.business.location;
   byId("featured-title").textContent = content.sections.featuredTitle;
@@ -72,10 +73,14 @@ function renderSite() {
 
   // DoorDash links everywhere
   wireDoorDash();
+  renderHours();
+  renderAddress();
+  renderSocial();
   renderMarquee();
   renderFilters();
   renderMenu();
   renderGallery();
+  renderReviews();
   renderCart();
   applyLang();
   applyAvailability();
@@ -88,6 +93,79 @@ function wireDoorDash() {
     if (!el) return;
     if (url) { el.href = url; el.style.display = ""; }
     else { el.style.display = "none"; }
+  });
+}
+
+/* ---------- Hours grid ---------- */
+function renderHours() {
+  const grid = byId("hours-grid");
+  if (!grid) return;
+  const sched = content.business?.hoursSchedule;
+  const note = byId("hours");
+
+  // If no structured schedule, fall back to the legacy single-line note.
+  if (!sched || typeof sched !== "object") {
+    grid.innerHTML = "";
+    if (note) { note.hidden = false; note.textContent = content.business?.hours || ""; }
+    return;
+  }
+  if (note) note.hidden = true;
+
+  const dayKeys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+  const labels = {
+    en: { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun" },
+    es: { mon: "Lun", tue: "Mar", wed: "Mié", thu: "Jue", fri: "Vie", sat: "Sáb", sun: "Dom" }
+  };
+  const closedWord = { en: "Closed", es: "Cerrado" };
+  const todayIdx = (new Date().getDay() + 6) % 7; // JS Sun=0 -> our Mon=0 index
+
+  grid.innerHTML = dayKeys.map((key, i) => {
+    let value = String(sched[key] || "").trim();
+    const isClosed = /^closed$|^cerrado$/i.test(value);
+    if (isClosed) value = closedWord[lang] || "Closed";
+    const isToday = i === todayIdx;
+    return `<div class="hours-day ${isToday ? "is-today" : ""} ${isClosed ? "is-closed" : ""}">
+      <span class="hours-dow">${labels[lang]?.[key] || labels.en[key]}</span>
+      <span class="hours-time">${escapeHtml(value)}</span>
+    </div>`;
+  }).join("");
+}
+
+/* ---------- Address ---------- */
+function renderAddress() {
+  const addr = content.business?.address || {};
+  const parts = [addr.placedAt, addr.street, addr.cityStateZip].map((p) => String(p || "").trim()).filter(Boolean);
+  const oneLine = parts.join(" · ");
+  const mapUrl = String(addr.mapUrl || "").trim()
+    || (parts.length ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([addr.street, addr.cityStateZip].filter(Boolean).join(" "))}` : "");
+
+  const link = byId("address-link");
+  if (link) {
+    if (oneLine) { link.textContent = oneLine; link.href = mapUrl || "#"; link.style.display = ""; }
+    else { link.style.display = "none"; }
+  }
+  const foot = byId("footer-address");
+  if (foot) foot.textContent = oneLine;
+}
+
+/* ---------- Social icons ---------- */
+function socialSvg(kind) {
+  if (kind === "facebook") {
+    return `<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg>`;
+  }
+  return `<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zm0 1.8c-3.15 0-3.52.01-4.76.07-.99.05-1.53.21-1.89.35-.47.18-.81.4-1.17.76-.36.36-.58.7-.76 1.17-.14.36-.3.9-.35 1.89-.06 1.24-.07 1.61-.07 4.76s.01 3.52.07 4.76c.05.99.21 1.53.35 1.89.18.47.4.81.76 1.17.36.36.7.58 1.17.76.36.14.9.3 1.89.35 1.24.06 1.61.07 4.76.07s3.52-.01 4.76-.07c.99-.05 1.53-.21 1.89-.35.47-.18.81-.4 1.17-.76.36-.36.58-.7.76-1.17.14-.36.3-.9.35-1.89.06-1.24.07-1.61.07-4.76s-.01-3.52-.07-4.76c-.05-.99-.21-1.53-.35-1.89a3.15 3.15 0 0 0-.76-1.17 3.15 3.15 0 0 0-1.17-.76c-.36-.14-.9-.3-1.89-.35-1.24-.06-1.61-.07-4.76-.07zm0 3.06a5.12 5.12 0 1 1 0 10.24 5.12 5.12 0 0 1 0-10.24zm0 1.8a3.32 3.32 0 1 0 0 6.64 3.32 3.32 0 0 0 0-6.64zm5.34-3.2a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg>`;
+}
+
+function renderSocial() {
+  const social = content.business?.social || {};
+  const links = [];
+  if (String(social.facebook || "").trim()) links.push({ kind: "facebook", url: social.facebook.trim(), label: "Facebook" });
+  if (String(social.instagram || "").trim()) links.push({ kind: "instagram", url: social.instagram.trim(), label: "Instagram" });
+
+  const html = links.map((l) => `<a class="social-link social-${l.kind}" href="${escapeAttr(l.url)}" target="_blank" rel="noopener noreferrer" aria-label="${l.label}">${socialSvg(l.kind)}</a>`).join("");
+  ["social-row-top", "social-row-footer"].forEach((id) => {
+    const el = byId(id);
+    if (el) el.innerHTML = html;
   });
 }
 
@@ -298,7 +376,96 @@ function startGalleryAuto() {
 function stopGalleryAuto() { if (galleryTimer) { clearInterval(galleryTimer); galleryTimer = null; } }
 function restartGalleryAuto() { startGalleryAuto(); }
 
-/* ---------- Lightbox ---------- */
+/* ---------- Reviews / Testimonials ---------- */
+let reviewItems = [];
+let reviewIndex = 0;
+let reviewTimer = null;
+
+function renderReviews() {
+  const section = byId("reviews");
+  if (!section) return;
+  const reviews = content.reviews || {};
+  reviewItems = Array.isArray(reviews.items) ? reviews.items.filter((r) => r && (r.text || r.text_es)) : [];
+
+  // Hide the whole section if there are no reviews to show.
+  if (!reviewItems.length) { section.hidden = true; return; }
+  section.hidden = false;
+
+  // Section title (bilingual)
+  const titleEl = byId("reviews-title");
+  if (titleEl) titleEl.textContent = (lang === "es" && reviews.titleEs) ? reviews.titleEs : (reviews.title || titleEl.textContent);
+
+  // Build the carousel slides
+  const wrap = byId("reviews-carousel");
+  wrap.innerHTML = `
+    <div class="review-viewport">
+      <div class="review-track" id="review-track">
+        ${reviewItems.map((r) => {
+          const body = (lang === "es" && r.text_es) ? r.text_es : (r.text || r.text_es || "");
+          const name = escapeHtml(r.name || "Guest");
+          return `
+          <figure class="review-slide">
+            <div class="review-stars" aria-hidden="true">★★★★★</div>
+            <blockquote class="review-text">${escapeHtml(body)}</blockquote>
+            <figcaption class="review-name">— ${name}</figcaption>
+          </figure>`;
+        }).join("")}
+      </div>
+    </div>
+    ${reviewItems.length > 1 ? `
+    <button class="review-nav review-prev" id="review-prev" aria-label="Previous review">&#8249;</button>
+    <button class="review-nav review-next" id="review-next" aria-label="Next review">&#8250;</button>
+    <div class="review-dots" id="review-dots">
+      ${reviewItems.map((_, i) => `<button class="review-dot ${i === 0 ? "active" : ""}" data-rdot="${i}" aria-label="Go to review ${i + 1}"></button>`).join("")}
+    </div>` : ""}
+  `;
+
+  reviewIndex = 0;
+  updateReviews();
+  startReviewAuto();
+
+  if (reviewItems.length > 1) {
+    byId("review-prev").addEventListener("click", () => { stepReviews(-1); restartReviewAuto(); });
+    byId("review-next").addEventListener("click", () => { stepReviews(1); restartReviewAuto(); });
+    wrap.querySelectorAll("[data-rdot]").forEach((d) => d.addEventListener("click", () => { reviewIndex = Number(d.dataset.rdot); updateReviews(); restartReviewAuto(); }));
+    wrap.addEventListener("mouseenter", stopReviewAuto);
+    wrap.addEventListener("mouseleave", startReviewAuto);
+  }
+
+  // Wire the Google review button + QR
+  const url = String(reviews.reviewUrl || "").trim();
+  const valid = url && /^https?:\/\//i.test(url) && !/REPLACE_WITH/i.test(url);
+  const btn = byId("review-btn");
+  const qr = byId("review-qr");
+  const qrImg = byId("review-qr-img");
+  if (valid) {
+    if (btn) { btn.href = url; btn.style.display = ""; }
+    if (qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=0&data=${encodeURIComponent(url)}`;
+    if (qr) qr.style.display = "";
+  } else {
+    // No valid link yet — hide button + QR so customers never hit a dead end.
+    if (btn) btn.style.display = "none";
+    if (qr) qr.style.display = "none";
+  }
+}
+
+function updateReviews() {
+  const track = byId("review-track");
+  if (track) track.style.transform = `translateX(-${reviewIndex * 100}%)`;
+  document.querySelectorAll("#review-dots .review-dot").forEach((d, i) => d.classList.toggle("active", i === reviewIndex));
+}
+function stepReviews(dir) {
+  if (!reviewItems.length) return;
+  reviewIndex = (reviewIndex + dir + reviewItems.length) % reviewItems.length;
+  updateReviews();
+}
+function startReviewAuto() {
+  stopReviewAuto();
+  if (reviewItems.length > 1) reviewTimer = setInterval(() => stepReviews(1), 6000);
+}
+function stopReviewAuto() { if (reviewTimer) { clearInterval(reviewTimer); reviewTimer = null; } }
+function restartReviewAuto() { startReviewAuto(); }
+
 function openLightbox(i) {
   lightboxIndex = i;
   stopGalleryAuto();
@@ -542,6 +709,8 @@ document.querySelectorAll("#lang-toggle button").forEach((b) => {
     renderFilters();
     renderMenu();
     renderCart();
+    renderReviews();
+    renderHours();
     applyAvailability();
   });
 });

@@ -54,6 +54,7 @@
         <a href="#menu" data-i18n="navMenu">Menu</a>
         <a href="#order" data-i18n="navOrder">Order</a>
         <a href="#story" data-i18n="navAbout">About</a>
+        <a href="#reviews" data-i18n="navReviews">Reviews</a>
         <a class="nav-dd" id="dd-nav" href="#" target="_blank" rel="noopener">DoorDash</a>
       </nav>
       <div class="lang-toggle" id="lang-toggle">
@@ -98,7 +99,8 @@
           <span class="info-icon">🕒</span>
           <div>
             <p class="info-label" data-i18n="sfHours">Hours</p>
-            <p class="info-value" id="hours">Follow us for current truck hours</p>
+            <div class="hours-grid" id="hours-grid"></div>
+            <p class="info-value info-hours-note" id="hours" hidden></p>
           </div>
         </div>
         <div class="info-card">
@@ -106,6 +108,7 @@
           <div>
             <p class="info-label" data-i18n="sfFind">Find the truck</p>
             <p class="info-value" id="location-2">Deltona, FL &amp; nearby events</p>
+            <a class="info-address" id="address-link" href="#" target="_blank" rel="noopener"></a>
           </div>
         </div>
         <div class="info-card">
@@ -113,6 +116,7 @@
           <div>
             <p class="info-label" data-i18n="sfCall">Call to order</p>
             <p class="info-value"><a id="phone-link" href="tel:3862156720">386-215-6720</a></p>
+            <div class="social-row" id="social-row-top"></div>
           </div>
         </div>
       </section>
@@ -268,6 +272,24 @@
         <div class="gallery" id="gallery"></div>
       </section>
 
+      <section class="section reviews-section" id="reviews" hidden>
+        <div class="section-head">
+          <p class="eyebrow" data-i18n="reviewsEyebrow">Reviews</p>
+          <h2 id="reviews-title">What our guests are saying</h2>
+        </div>
+        <div class="reviews-carousel" id="reviews-carousel"></div>
+        <div class="review-cta">
+          <p class="review-cta-text" id="review-cta-text" data-i18n="reviewCtaText">Enjoyed your meal? Leave Chef Carmen a Google review!</p>
+          <div class="review-cta-row">
+            <a class="btn btn-review" id="review-btn" href="#" target="_blank" rel="noopener" data-i18n="reviewBtn">Leave a Google Review</a>
+            <div class="review-qr" id="review-qr" aria-hidden="true">
+              <img id="review-qr-img" src="" alt="Scan to leave a Google review">
+              <span class="review-qr-label" data-i18n="reviewScan">Scan to review</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div class="back-to-top-wrap">
         <a href="#top" class="back-to-top" aria-label="Back to top">
           <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
@@ -278,6 +300,8 @@
     <footer class="footer">
       <img class="footer-logo" src="/assets/sweet-salao-logo.png" alt="Sweet & Salao">
       <div class="footer-info">
+        <p class="footer-address" id="footer-address"></p>
+        <div class="social-row" id="social-row-footer"></div>
         <span class="footer-copy">Copyright 2026 - Sweet &amp; Salao - All Rights Reserved.</span>
         <span class="footer-credit">Site by <a href="https://www.finessemedia.pro" target="_blank" rel="noopener">Finesse Media LLC</a></span>
       </div>

@@ -56,6 +56,7 @@
             <a href="#menu-admin"><span class="ico">🍽️</span> <span data-i18n="menu">Menu</span></a>
             <a href="#ordering"><span class="ico">💳</span> <span data-i18n="checkout">Checkout</span></a>
             <a href="#copy"><span class="ico">✍️</span> <span data-i18n="pageCopy">Page Copy</span></a>
+            <a href="#reviews-admin"><span class="ico">⭐</span> <span data-i18n="reviewsAdminTitle">Reviews</span></a>
             <a href="#media"><span class="ico">🖼️</span> <span data-i18n="images">Images</span></a>
             <a href="#gallery-panel"><span class="ico">📸</span> <span data-i18n="gallery">Gallery</span></a>
           </nav>
@@ -136,10 +137,39 @@
                 <input data-path="business.location">
               </div>
               <div class="field">
-                <label class="field-label"><span data-i18n="hours">Hours</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_hours"></span></span></label>
+                <label class="field-label"><span data-i18n="hours">Hours (legacy note)</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_hours"></span></span></label>
                 <input data-path="business.hours">
               </div>
             </div>
+
+            <div class="panel-head" style="margin-top:18px"><span class="ico">🕒</span><h3 data-i18n="hoursScheduleTitle">Weekly Hours</h3></div>
+            <p class="login-hint" style="text-align:left" data-i18n="hoursScheduleHint"></p>
+            <div class="field-grid">
+              <div class="field"><label class="field-label"><span data-i18n="dayMon">Monday</span></label><input data-path="business.hoursSchedule.mon"></div>
+              <div class="field"><label class="field-label"><span data-i18n="dayTue">Tuesday</span></label><input data-path="business.hoursSchedule.tue"></div>
+              <div class="field"><label class="field-label"><span data-i18n="dayWed">Wednesday</span></label><input data-path="business.hoursSchedule.wed"></div>
+              <div class="field"><label class="field-label"><span data-i18n="dayThu">Thursday</span></label><input data-path="business.hoursSchedule.thu"></div>
+              <div class="field"><label class="field-label"><span data-i18n="dayFri">Friday</span></label><input data-path="business.hoursSchedule.fri"></div>
+              <div class="field"><label class="field-label"><span data-i18n="daySat">Saturday</span></label><input data-path="business.hoursSchedule.sat"></div>
+              <div class="field"><label class="field-label"><span data-i18n="daySun">Sunday</span></label><input data-path="business.hoursSchedule.sun"></div>
+            </div>
+
+            <div class="panel-head" style="margin-top:18px"><span class="ico">📍</span><h3 data-i18n="addressTitle">Truck Location</h3></div>
+            <div class="field-grid">
+              <div class="field"><label class="field-label"><span data-i18n="addrPlacedAt">Located in / landmark</span></label><input data-path="business.address.placedAt"></div>
+              <div class="field"><label class="field-label"><span data-i18n="addrStreet">Street address</span></label><input data-path="business.address.street"></div>
+            </div>
+            <div class="field-grid">
+              <div class="field"><label class="field-label"><span data-i18n="addrCityStateZip">City, State ZIP</span></label><input data-path="business.address.cityStateZip"></div>
+              <div class="field"><label class="field-label"><span data-i18n="addrMapUrl">Google Maps link (optional)</span></label><input data-path="business.address.mapUrl"></div>
+            </div>
+
+            <div class="panel-head" style="margin-top:18px"><span class="ico">🔗</span><h3 data-i18n="socialTitle">Social Links</h3></div>
+            <div class="field-grid">
+              <div class="field"><label class="field-label"><span data-i18n="socialFb">Facebook URL</span></label><input data-path="business.social.facebook"></div>
+              <div class="field"><label class="field-label"><span data-i18n="socialIg">Instagram URL</span></label><input data-path="business.social.instagram"></div>
+            </div>
+
             <div class="field-grid">
               <div class="field">
                 <label class="field-label"><span data-i18n="logoUrl">Logo image URL</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_logoUrl"></span></span></label>
@@ -217,6 +247,27 @@
                 <textarea data-path="seo.description"></textarea>
               </div>
             </div>
+          </section>
+
+          <!-- REVIEWS -->
+          <section class="panel" id="reviews-admin">
+            <div class="panel-head"><span class="ico">⭐</span><h3 data-i18n="reviewsAdminTitle">Reviews</h3><span class="spacer"></span><button class="btn btn-lime btn-sm" id="add-review" type="button" data-i18n="addReview">Add Review</button></div>
+            <div class="field">
+              <label class="field-label"><span data-i18n="reviewUrlLabel">Google review link</span></label>
+              <input data-path="reviews.reviewUrl" data-i18n-ph="reviewUrlPh" placeholder="https://g.page/r/your-code/review">
+              <p class="login-hint" style="text-align:left" data-i18n="reviewUrlHint"></p>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label class="field-label"><span data-i18n="reviewSecTitleEn">Section title (English)</span></label>
+                <input data-path="reviews.title">
+              </div>
+              <div class="field">
+                <label class="field-label"><span data-i18n="reviewSecTitleEs">Section title (Spanish)</span></label>
+                <input data-path="reviews.titleEs">
+              </div>
+            </div>
+            <div id="reviews-editor"></div>
           </section>
 
           <!-- IMAGES -->
