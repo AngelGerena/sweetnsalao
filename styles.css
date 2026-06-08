@@ -380,7 +380,7 @@ a.pay-handle:hover { text-decoration: underline; }
   background: var(--ink); color: var(--cream); padding: 40px clamp(16px, 4vw, 48px);
   display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
 }
-.footer-logo { height: 64px; width: auto; filter: drop-shadow(0 4px 14px rgba(0,0,0,.4)); }
+.footer-logo { height: 120px; width: auto; filter: drop-shadow(0 4px 14px rgba(0,0,0,.4)); }
 .footer-info { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
 .footer-copy { font-weight: 700; font-size: 15px; }
 .footer-credit { font-size: 13px; color: rgba(255,255,255,.7); }
