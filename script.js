@@ -59,7 +59,6 @@ function renderSite() {
   byId("zelle-handle").textContent = content.ordering.zelleHandle;
   byId("cashapp-handle").textContent = content.ordering.cashAppHandle;
   byId("delivery-note").textContent = content.ordering.pickupInstructions;
-  byId("contact-link").href = `mailto:${content.business.email}`;
 
   // Phone link (first number)
   const firstPhone = String(content.business.phone || "").split("/")[0].replace(/[^0-9]/g, "");

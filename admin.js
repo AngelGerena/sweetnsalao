@@ -30,6 +30,7 @@ document.querySelectorAll(".lang-toggle button").forEach((b) => {
     if (!byId("admin-shell").classList.contains("hidden")) {
       renderProducts();
       renderGalleryEditor();
+      renderReviewsEditor();
     }
   });
 });
@@ -85,6 +86,7 @@ async function loadContent() {
   bindFields();
   renderProducts();
   renderGalleryEditor();
+  renderReviewsEditor();
   setStatus("readyToEdit", "saved");
 }
 
@@ -277,6 +279,57 @@ byId("add-gallery").addEventListener("click", () => {
   content.gallery = content.gallery || [];
   content.gallery.push("");
   renderGalleryEditor();
+});
+
+/* ---------- Reviews editor ---------- */
+function renderReviewsEditor() {
+  const editor = byId("reviews-editor");
+  if (!editor) return;
+  content.reviews = content.reviews || {};
+  content.reviews.items = Array.isArray(content.reviews.items) ? content.reviews.items : [];
+  editor.innerHTML = content.reviews.items.map((review, index) => `
+    <div class="review-edit-row">
+      <div class="field-grid">
+        <div class="field">
+          <label class="field-label"><span>${t("reviewNameLabel")}</span></label>
+          <input data-review="${index}" data-rfield="name" value="${escapeAttr(review.name || "")}">
+        </div>
+        <div class="field" style="display:flex;align-items:flex-end">
+          <button class="btn btn-danger btn-sm" data-remove-review="${index}" type="button">${t("remove")}</button>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label"><span>${t("reviewTextEn")}</span></label>
+        <textarea data-review="${index}" data-rfield="text">${escapeHtml(review.text || "")}</textarea>
+      </div>
+      <div class="field">
+        <label class="field-label"><span>${t("reviewTextEs")}</span></label>
+        <textarea data-review="${index}" data-rfield="text_es">${escapeHtml(review.text_es || "")}</textarea>
+      </div>
+    </div>
+  `).join("");
+  editor.querySelectorAll("[data-review]").forEach((input) => {
+    input.addEventListener("input", () => {
+      const idx = Number(input.dataset.review);
+      content.reviews.items[idx][input.dataset.rfield] = input.value;
+      setStatus("unsaved", "unsaved");
+    });
+  });
+  editor.querySelectorAll("[data-remove-review]").forEach((button) => {
+    button.addEventListener("click", () => {
+      content.reviews.items.splice(Number(button.dataset.removeReview), 1);
+      renderReviewsEditor();
+      setStatus("unsaved", "unsaved");
+    });
+  });
+}
+
+byId("add-review").addEventListener("click", () => {
+  content.reviews = content.reviews || {};
+  content.reviews.items = Array.isArray(content.reviews.items) ? content.reviews.items : [];
+  content.reviews.items.push({ name: "", text: "", text_es: "" });
+  renderReviewsEditor();
+  setStatus("unsaved", "unsaved");
 });
 
 /* ---------- Upload ---------- */
