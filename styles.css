@@ -496,14 +496,14 @@ body.is-closed .add-btn { filter: grayscale(.4); }
 }
 
 /* ---------- Hours grid / Address / Social ---------- */
-.hours-grid { display: grid; grid-template-columns: 1fr; gap: 2px; margin-top: 4px; }
-.hours-day { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 2px 0; font-family: var(--body); font-size: 14px; color: var(--ink); }
-.hours-day .hours-dow { font-weight: 700; color: var(--ink-soft); }
-.hours-day .hours-time { font-weight: 600; }
-.hours-day.is-closed .hours-time { color: var(--ink-soft); font-weight: 500; }
-.hours-day.is-today { background: rgba(255,46,136,.08); border-radius: 8px; padding: 2px 8px; margin: 0 -8px; }
-.hours-day.is-today .hours-dow { color: var(--pink-deep); }
-.hours-day.is-today .hours-time { color: var(--pink-deep); font-weight: 800; }
+.hours-grid { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
+.hours-line { display: flex; align-items: baseline; gap: 8px; font-family: var(--body); font-size: 14px; color: var(--ink); white-space: nowrap; }
+.hours-line .hours-dow { font-weight: 700; color: var(--ink-soft); }
+.hours-line .hours-time { font-weight: 700; color: var(--ink); }
+.hours-line.hours-closed .hours-dow,
+.hours-line.hours-closed .hours-time { color: var(--ink-soft); font-weight: 500; font-size: 13px; }
+.hours-line.is-today .hours-dow { color: var(--pink-deep); }
+.hours-line.is-today .hours-time { color: var(--pink-deep); font-weight: 800; }
 .info-address { display: inline-block; margin-top: 4px; font-family: var(--body); font-size: 13.5px; font-weight: 600; color: var(--turq-deep); text-decoration: none; line-height: 1.35; }
 .info-address:hover { text-decoration: underline; }
 .social-row { display: flex; gap: 10px; margin-top: 10px; }
