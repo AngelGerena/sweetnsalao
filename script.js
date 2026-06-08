@@ -96,7 +96,7 @@ function wireDoorDash() {
   });
 }
 
-/* ---------- Hours grid ---------- */
+/* ---------- Hours (compact summary) ---------- */
 function renderHours() {
   const grid = byId("hours-grid");
   if (!grid) return;
@@ -117,18 +117,46 @@ function renderHours() {
     es: { mon: "Lun", tue: "Mar", wed: "Mié", thu: "Jue", fri: "Vie", sat: "Sáb", sun: "Dom" }
   };
   const closedWord = { en: "Closed", es: "Cerrado" };
-  const todayIdx = (new Date().getDay() + 6) % 7; // JS Sun=0 -> our Mon=0 index
+  const L = labels[lang] || labels.en;
+  const todayKey = dayKeys[(new Date().getDay() + 6) % 7];
 
-  grid.innerHTML = dayKeys.map((key, i) => {
-    let value = String(sched[key] || "").trim();
-    const isClosed = /^closed$|^cerrado$/i.test(value);
-    if (isClosed) value = closedWord[lang] || "Closed";
-    const isToday = i === todayIdx;
-    return `<div class="hours-day ${isToday ? "is-today" : ""} ${isClosed ? "is-closed" : ""}">
-      <span class="hours-dow">${labels[lang]?.[key] || labels.en[key]}</span>
-      <span class="hours-time">${escapeHtml(value)}</span>
+  const norm = (v) => {
+    const s = String(v || "").trim();
+    return /^closed$|^cerrado$/i.test(s) ? "__closed__" : s;
+  };
+
+  // Group consecutive days that share the same value into ranges.
+  const groups = [];
+  for (const key of dayKeys) {
+    const val = norm(sched[key]);
+    const last = groups[groups.length - 1];
+    if (last && last.val === val) last.days.push(key);
+    else groups.push({ val, days: [key] });
+  }
+
+  const rangeLabel = (days) => days.length === 1 ? L[days[0]] : `${L[days[0]]}–${L[days[days.length - 1]]}`;
+  const isToday = (days) => days.includes(todayKey);
+
+  // Open groups first (the useful info), then a single muted "closed" summary.
+  const openGroups = groups.filter((g) => g.val !== "__closed__");
+  const closedGroups = groups.filter((g) => g.val === "__closed__");
+
+  let html = openGroups.map((g) => `
+    <div class="hours-line ${isToday(g.days) ? "is-today" : ""}">
+      <span class="hours-dow">${rangeLabel(g.days)}</span>
+      <span class="hours-time">${escapeHtml(g.val)}</span>
+    </div>`).join("");
+
+  if (closedGroups.length) {
+    const closedDays = closedGroups.map((g) => rangeLabel(g.days)).join(", ");
+    const todayClosed = closedGroups.some((g) => isToday(g.days));
+    html += `<div class="hours-line hours-closed ${todayClosed ? "is-today" : ""}">
+      <span class="hours-dow">${closedDays}</span>
+      <span class="hours-time">${closedWord[lang] || "Closed"}</span>
     </div>`;
-  }).join("");
+  }
+
+  grid.innerHTML = html;
 }
 
 /* ---------- Address ---------- */
