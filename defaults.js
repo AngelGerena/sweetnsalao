@@ -55,7 +55,7 @@ export const defaultContent = {
   reviews: {
     title: "What our guests are saying",
     titleEs: "Lo que dicen nuestros clientes",
-    reviewUrl: "REPLACE_WITH_GOOGLE_REVIEW_LINK",
+    reviewUrl: "https://www.google.com/search?q=Sweet+%26+Salao+by+Chef+Carmen+Deltona+reviews",
     items: [
       { name: "Lily SB", text: "Five stars across the board — food, service, and atmosphere. We will be back!", text_es: "Cinco estrellas en todo: comida, servicio y ambiente. ¡Volveremos!" },
       { name: "Noemí Cardona Delgado", text: "Friendly and welcoming atmosphere and the food is great. La comida es buenísima y el ambiente es familiar y amigable.", text_es: "Ambiente familiar y acogedor, y la comida es excelente. La comida es buenísima y el ambiente es familiar y amigable." },
