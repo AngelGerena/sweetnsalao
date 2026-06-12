@@ -1,408 +1,246 @@
-// Bilingual strings for Sweet & Salao. Used by admin portal and storefront.
-export const i18n = {
-  en: {
-    // Login
-    ownerPortal: "Owner Portal",
-    adminPassword: "Admin password",
-    logIn: "Log In",
-    loginHint: "Enter the password set in your Netlify environment variables.",
-    backToSite: "← Back to site",
-    checking: "Checking password…",
-    // Top bar / nav
-    dashboard: "Dashboard",
-    siteEditor: "Site Editor",
-    siteEditorSub: "Update your menu, prices, photos, and business info. Changes go live when you publish.",
-    business: "Business",
-    menu: "Menu",
-    checkout: "Checkout",
-    images: "Images",
-    gallery: "Gallery",
-    viewSite: "View Site",
-    logOut: "Log Out",
-    // Status
-    loadedDefaults: "Loaded defaults",
-    readyToEdit: "Ready to edit",
-    unsaved: "Unsaved changes",
-    publishing: "Publishing…",
-    published: "Published",
-    publishFailed: "Publish failed",
-    // Business panel
-    businessDetails: "Business Details",
-    bizName: "Business name",
-    tagline: "Tagline",
-    intro: "Intro paragraph",
-    phone: "Phone",
-    email: "Email",
-    serviceArea: "Service area",
-    hours: "Hours",
-    logoUrl: "Logo image URL",
-    heroUrl: "Hero image URL",
-    hoursScheduleTitle: "Weekly Hours",
-    hoursScheduleHint: "Enter hours for each day, e.g. \"12–9 PM\". Type \"Closed\" for days the truck is not open.",
-    dayMon: "Monday", dayTue: "Tuesday", dayWed: "Wednesday", dayThu: "Thursday", dayFri: "Friday", daySat: "Saturday", daySun: "Sunday",
-    addressTitle: "Truck Location",
-    addrPlacedAt: "Located in / landmark",
-    addrStreet: "Street address",
-    addrCityStateZip: "City, State ZIP",
-    addrMapUrl: "Google Maps link (optional)",
-    socialTitle: "Social Links",
-    socialFb: "Facebook URL",
-    socialIg: "Instagram URL",
-    // Checkout panel
-    checkoutSettings: "Checkout Settings",
-    zelle: "Zelle email or phone",
-    cashapp: "Cash App handle",
-    doordash: "DoorDash storefront URL",
-    pickupInstr: "Pickup instructions",
-    doordashInstr: "DoorDash instructions",
-    // Copy panel
-    pageCopy: "Page Copy",
-    menuTitle: "Menu section title",
-    storyTitle: "Story title",
-    storyText: "Story text",
-    seoTitle: "SEO title",
-    seoDesc: "SEO description",
-    // Images
-    imageUpload: "Image Upload",
-    chooseFile: "Choose an image to upload",
-    uploadImage: "Upload Image",
-    upload: "Upload",
-    removeImage: "Remove image",
-    uploadedUrl: "Uploaded image URL (copy into a field below)",
-    uploadHint: "Upload a photo, then paste the returned URL into a menu item, gallery, hero, or logo field.",
-    uploading: "Uploading image…",
-    uploaded: "Image uploaded — URL copied below",
-    chooseFirst: "Choose an image first",
-    uploadFailed: "Upload failed",
-    // Menu items
-    menuItems: "Menu Items",
-    addItem: "Add Item",
-    searchItems: "Search menu items…",
-    name: "Name",
-    category: "Category",
-    price: "Price",
-    imageUrlField: "Image URL",
-    description: "Description",
-    available: "Available",
-    marketPrice: "Market price",
-    featured: "Featured",
-    duplicate: "Duplicate",
-    delete: "Delete",
-    confirmDelete: "Delete this menu item?",
-    addGalleryImage: "Add Gallery Image",
-    remove: "Remove",
-    galleryImages: "Gallery Images",
-    // Publish
-    publishChanges: "Publish Changes",
-    publishNote: "Publishing updates your live site content. It does not change the source code.",
-    // Tooltips
-    tip_bizName: "The name customers see in the header and title bar.",
-    tip_tagline: "A short line under your name describing the food.",
-    tip_intro: "A welcoming sentence shown near the top of the site.",
-    tip_phone: "Shown so customers can call. Use the main truck line.",
-    tip_email: "Where general inquiries are sent.",
-    tip_serviceArea: "The area or city you serve, e.g. Deltona, FL & nearby events.",
-    tip_hours: "Your hours, or a note to follow you for current locations.",
-    tip_logoUrl: "Web address of your logo image. Upload one below to get a URL.",
-    tip_heroUrl: "The big background photo at the top of the home page.",
-    tip_zelle: "Your Zelle phone or email. Customers send pickup payment here.",
-    tip_cashapp: "Your Cash App $tag, e.g. $SweetSalao.",
-    tip_doordash: "The full link to your DoorDash store page.",
-    tip_pickupInstr: "What customers see after ordering pickup.",
-    tip_doordashInstr: "What customers see when they choose DoorDash delivery.",
-    tip_menuTitle: "Heading above the menu, e.g. Straight from the truck.",
-    tip_storyTitle: "Heading for the about section.",
-    tip_storyText: "A short paragraph telling your story.",
-    tip_seoTitle: "The title that appears in Google search results.",
-    tip_seoDesc: "The description under your title in Google results.",
-    tip_itemName: "The dish name customers see.",
-    tip_itemCategory: "Which section it appears under (Entrees, Starters, etc.).",
-    tip_itemPrice: "The price in dollars. Leave blank if market price.",
-    tip_itemImage: "Photo URL for this dish. Upload above to get one. Leave blank for a clean text-only card.",
-    tip_itemDesc: "A short, appetizing description.",
-    tip_available: "Untick to hide this item from the menu temporarily.",
-    tip_marketPrice: "Tick if the price varies — shows 'Market Price' instead of a number.",
-    tip_featured: "Tick to add a star and feature this dish.",
-    tip_publish: "Saves your changes to the live website.",
-    availability: "Availability",
-    availabilityTitle: "Availability",
-    awayLabel: "Mark the truck as closed today",
-    closedMsgEn: "Closed message (English)",
-    closedMsgEs: "Closed message (Spanish)",
-    backDate: "Back open date",
-    backTime: "Back open time",
-    awayWarn: "While closed is on and published, customers cannot place any orders (pickup, WhatsApp, or DoorDash).",
-    tip_closedMsg: "The message customers see when you're closed. Shown in a banner and a pop-up.",
-    tip_backDate: "The date you'll reopen. Shown to customers as 'back on…'.",
-    tip_backTime: "The time you'll reopen on that day. Optional.",
-    navMenu: "Menu",
-    navOrder: "Order",
-    navAbout: "About",
-    navReviews: "Reviews",
-    reviewsEyebrow: "Reviews",
-    reviewCtaText: "Enjoyed your meal? Leave Chef Carmen a Google review!",
-    reviewBtn: "Leave a Google Review",
-    reviewScan: "Scan to review",
-    reviewsAdminTitle: "Reviews",
-    addReview: "Add Review",
-    reviewUrlLabel: "Google review link",
-    reviewUrlPh: "https://g.page/r/your-code/review",
-    reviewUrlHint: "Paste the Google review link from your Google Business Profile (Get more reviews). The button and QR code update automatically. Leave blank to hide them.",
-    reviewSecTitleEn: "Section title (English)",
-    reviewSecTitleEs: "Section title (Spanish)",
-    reviewNameLabel: "Customer name",
-    reviewTextEn: "Review (English)",
-    reviewTextEs: "Review (Spanish)",
-    orderBarText: "Now serving Deltona & nearby events",
-    orderOnDoordash: "Order on DoorDash",
-    viewMenu: "View the Menu",
-    sfHours: "Hours",
-    sfFind: "Find the truck",
-    sfCall: "Call to order",
-    elMenu: "The Menu",
-    menuTapHint: "Tap a category to explore. Add what you love and check out in seconds.",
-    all: "All",
-    yourOrder: "Your order",
-    total: "Total",
-    howOrder: "How would you like your order?",
-    pickup: "Pickup",
-    pickupSub: "At the truck window",
-    doordashDelivery: "DoorDash",
-    doordashSub: "Delivered to you",
-    yourName: "Your name",
-    phoneNumber: "Phone number",
-    orderNotes: "Order notes (sides, prep style, allergies)",
-    howPay: "How will you pay?",
-    placePickup: "Place Pickup Order",
-    payHintCook: "We confirm payment before cooking. Next step: send your payment and message us your order so we can start.",
-    cartEmpty: "Your order is empty. Add menu items to get started.",
-    addToOrder: "+ Add to Order",
-    added: "✓ Added",
-    callForPrice: "Call for Price",
-    marketPriceLabel: "Market Price",
-    orderReady: "Order ready to send",
-    twoSteps: "Two quick steps so Chef Carmen can start cooking:",
-    payByZelle: "1. Pay by Zelle",
-    payByCashapp: "1. Pay by Cash App",
-    sendTo: "Send",
-    to: "to",
-    scanZelle: "Scan the code or use the number in your bank app.",
-    scanCashapp: "Scan the code or tap the tag to open Cash App.",
-    step2Send: "2. Send your order to confirm",
-    sendWhatsapp: "Send order on WhatsApp",
-    sendBackup: "Send to backup line",
-    startNew: "Start a new order",
-    ddHandles: "DoorDash handles your name, address, and payment on their secure site. Tap below to send your order to the Sweet & Salao DoorDash page.",
-    continueDoordash: "Continue on DoorDash",
-    buildOrder: "Build your order",
-    checkoutLead: "Choose pickup at the window or delivery through DoorDash. For pickup, send payment by Zelle or Cash App and we'll text when it's ready.",
-    orderFullDoordash: "Order the full menu on DoorDash",
-    paymentForPickup: "Payment for pickup",
-    closedTitle: "We're Closed Today",
-    backOn: "We'll be back on",
-    at: "at",
-    closedGotIt: "Got it",
-    orderingDisabled: "Ordering is unavailable while we're closed."
-  },
-  es: {
-    ownerPortal: "Portal del Dueño",
-    adminPassword: "Contraseña de administrador",
-    logIn: "Iniciar Sesión",
-    loginHint: "Ingresa la contraseña configurada en las variables de entorno de Netlify.",
-    backToSite: "← Volver al sitio",
-    checking: "Verificando contraseña…",
-    dashboard: "Panel",
-    siteEditor: "Editor del Sitio",
-    siteEditorSub: "Actualiza tu menú, precios, fotos e información del negocio. Los cambios se publican cuando presionas Publicar.",
-    business: "Negocio",
-    menu: "Menú",
-    checkout: "Pagos",
-    images: "Imágenes",
-    gallery: "Galería",
-    viewSite: "Ver Sitio",
-    logOut: "Cerrar Sesión",
-    loadedDefaults: "Valores cargados",
-    readyToEdit: "Listo para editar",
-    unsaved: "Cambios sin guardar",
-    publishing: "Publicando…",
-    published: "Publicado",
-    publishFailed: "Error al publicar",
-    businessDetails: "Datos del Negocio",
-    bizName: "Nombre del negocio",
-    tagline: "Lema",
-    intro: "Párrafo de introducción",
-    phone: "Teléfono",
-    email: "Correo electrónico",
-    serviceArea: "Área de servicio",
-    hours: "Horario",
-    logoUrl: "URL del logo",
-    heroUrl: "URL de la foto principal",
-    hoursScheduleTitle: "Horario Semanal",
-    hoursScheduleHint: "Ingresa el horario de cada día, ej. \"12–9 PM\". Escribe \"Closed\" o \"Cerrado\" para los días que el food truck no abre.",
-    dayMon: "Lunes", dayTue: "Martes", dayWed: "Miércoles", dayThu: "Jueves", dayFri: "Viernes", daySat: "Sábado", daySun: "Domingo",
-    addressTitle: "Ubicación del Food Truck",
-    addrPlacedAt: "Ubicado en / punto de referencia",
-    addrStreet: "Dirección",
-    addrCityStateZip: "Ciudad, Estado y código postal",
-    addrMapUrl: "Enlace de Google Maps (opcional)",
-    socialTitle: "Redes Sociales",
-    socialFb: "URL de Facebook",
-    socialIg: "URL de Instagram",
-    checkoutSettings: "Configuración de Pagos",
-    zelle: "Zelle (correo o teléfono)",
-    cashapp: "Usuario de Cash App",
-    doordash: "Enlace de DoorDash",
-    pickupInstr: "Instrucciones para recoger",
-    doordashInstr: "Instrucciones de DoorDash",
-    pageCopy: "Textos de la Página",
-    menuTitle: "Título de la sección del menú",
-    storyTitle: "Título de la historia",
-    storyText: "Texto de la historia",
-    seoTitle: "Título SEO",
-    seoDesc: "Descripción SEO",
-    imageUpload: "Subir Imagen",
-    chooseFile: "Elige una imagen para subir",
-    uploadImage: "Subir Imagen",
-    upload: "Subir",
-    removeImage: "Quitar imagen",
-    uploadedUrl: "URL de la imagen subida (cópiala en un campo)",
-    uploadHint: "Sube una foto y pega la URL resultante en un platillo, la galería, la foto principal o el logo.",
-    uploading: "Subiendo imagen…",
-    uploaded: "Imagen subida — URL copiada abajo",
-    chooseFirst: "Elige una imagen primero",
-    uploadFailed: "Error al subir",
-    menuItems: "Platillos del Menú",
-    addItem: "Agregar Platillo",
-    searchItems: "Buscar platillos…",
-    name: "Nombre",
-    category: "Categoría",
-    price: "Precio",
-    imageUrlField: "URL de la imagen",
-    description: "Descripción",
-    available: "Disponible",
-    marketPrice: "Precio de mercado",
-    featured: "Destacado",
-    duplicate: "Duplicar",
-    delete: "Eliminar",
-    confirmDelete: "¿Eliminar este platillo?",
-    addGalleryImage: "Agregar Imagen a la Galería",
-    remove: "Quitar",
-    galleryImages: "Imágenes de la Galería",
-    publishChanges: "Publicar Cambios",
-    publishNote: "Publicar actualiza el contenido de tu sitio. No cambia el código fuente.",
-    tip_bizName: "El nombre que los clientes ven en el encabezado.",
-    tip_tagline: "Una frase corta bajo tu nombre que describe la comida.",
-    tip_intro: "Una oración de bienvenida cerca de la parte superior.",
-    tip_phone: "Para que los clientes llamen. Usa la línea principal.",
-    tip_email: "A dónde llegan las consultas generales.",
-    tip_serviceArea: "El área o ciudad que sirves, ej. Deltona, FL y eventos cercanos.",
-    tip_hours: "Tu horario, o una nota para seguirte por las ubicaciones.",
-    tip_logoUrl: "Dirección web de tu logo. Sube uno abajo para obtener la URL.",
-    tip_heroUrl: "La foto grande de fondo en la parte superior.",
-    tip_zelle: "Tu teléfono o correo de Zelle para pagos de recogida.",
-    tip_cashapp: "Tu $usuario de Cash App, ej. $SweetSalao.",
-    tip_doordash: "El enlace completo a tu página de DoorDash.",
-    tip_pickupInstr: "Lo que ven los clientes al ordenar para recoger.",
-    tip_doordashInstr: "Lo que ven los clientes al elegir DoorDash.",
-    tip_menuTitle: "Encabezado sobre el menú, ej. Directo del troque.",
-    tip_storyTitle: "Encabezado de la sección sobre nosotros.",
-    tip_storyText: "Un párrafo corto que cuenta tu historia.",
-    tip_seoTitle: "El título que aparece en los resultados de Google.",
-    tip_seoDesc: "La descripción bajo tu título en Google.",
-    tip_itemName: "El nombre del platillo que ven los clientes.",
-    tip_itemCategory: "En qué sección aparece (Entradas, Aperitivos, etc.).",
-    tip_itemPrice: "El precio en dólares. Déjalo vacío si es precio de mercado.",
-    tip_itemImage: "URL de la foto del platillo. Sube una arriba. Déjalo vacío para una tarjeta solo de texto.",
-    tip_itemDesc: "Una descripción corta y apetitosa.",
-    tip_available: "Desmarca para ocultar este platillo temporalmente.",
-    tip_marketPrice: "Marca si el precio varía — muestra 'Precio de Mercado'.",
-    tip_featured: "Marca para añadir una estrella y destacar el platillo.",
-    tip_publish: "Guarda tus cambios en el sitio web en vivo.",
-    availability: "Disponibilidad",
-    availabilityTitle: "Disponibilidad",
-    awayLabel: "Marcar el troque como cerrado hoy",
-    closedMsgEn: "Mensaje de cierre (Inglés)",
-    closedMsgEs: "Mensaje de cierre (Español)",
-    backDate: "Fecha de reapertura",
-    backTime: "Hora de reapertura",
-    awayWarn: "Mientras 'cerrado' esté activo y publicado, los clientes no podrán hacer pedidos (recoger, WhatsApp ni DoorDash).",
-    tip_closedMsg: "El mensaje que ven los clientes cuando estás cerrado. Aparece en un aviso y una ventana.",
-    tip_backDate: "La fecha en que reabres. Se muestra como 'regresamos el…'.",
-    tip_backTime: "La hora en que reabres ese día. Opcional.",
-    navMenu: "Menú",
-    navOrder: "Ordenar",
-    navAbout: "Nosotros",
-    navReviews: "Reseñas",
-    reviewsEyebrow: "Reseñas",
-    reviewCtaText: "¿Disfrutaste tu comida? ¡Déjale una reseña a Chef Carmen en Google!",
-    reviewBtn: "Dejar una Reseña en Google",
-    reviewScan: "Escanea para reseñar",
-    reviewsAdminTitle: "Reseñas",
-    addReview: "Agregar Reseña",
-    reviewUrlLabel: "Enlace de reseña de Google",
-    reviewUrlPh: "https://g.page/r/tu-codigo/review",
-    reviewUrlHint: "Pega el enlace de reseña de Google desde tu Perfil de Negocio de Google (Conseguir más reseñas). El botón y el código QR se actualizan automáticamente. Déjalo en blanco para ocultarlos.",
-    reviewSecTitleEn: "Título de la sección (Inglés)",
-    reviewSecTitleEs: "Título de la sección (Español)",
-    reviewNameLabel: "Nombre del cliente",
-    reviewTextEn: "Reseña (Inglés)",
-    reviewTextEs: "Reseña (Español)",
-    orderBarText: "Sirviendo en Deltona y eventos cercanos",
-    orderOnDoordash: "Ordena por DoorDash",
-    viewMenu: "Ver el Menú",
-    sfHours: "Horario",
-    sfFind: "Encuentra el troque",
-    sfCall: "Llama para ordenar",
-    elMenu: "El Menú",
-    menuTapHint: "Toca una categoría para explorar. Agrega lo que te guste y ordena en segundos.",
-    all: "Todo",
-    yourOrder: "Tu orden",
-    total: "Total",
-    howOrder: "¿Cómo quieres tu orden?",
-    pickup: "Recoger",
-    pickupSub: "En la ventana del troque",
-    doordashDelivery: "DoorDash",
-    doordashSub: "Entrega a domicilio",
-    yourName: "Tu nombre",
-    phoneNumber: "Número de teléfono",
-    orderNotes: "Notas (acompañantes, preparación, alergias)",
-    howPay: "¿Cómo vas a pagar?",
-    placePickup: "Ordenar para Recoger",
-    payHintCook: "Confirmamos el pago antes de cocinar. Siguiente paso: envía tu pago y mándanos tu orden para empezar.",
-    cartEmpty: "Tu orden está vacía. Agrega platillos para empezar.",
-    addToOrder: "+ Agregar",
-    added: "✓ Agregado",
-    callForPrice: "Llama por el Precio",
-    marketPriceLabel: "Precio de Mercado",
-    orderReady: "Orden lista para enviar",
-    twoSteps: "Dos pasos rápidos para que Chef Carmen empiece a cocinar:",
-    payByZelle: "1. Paga por Zelle",
-    payByCashapp: "1. Paga por Cash App",
-    sendTo: "Envía",
-    to: "a",
-    scanZelle: "Escanea el código o usa el número en tu app del banco.",
-    scanCashapp: "Escanea el código o toca el usuario para abrir Cash App.",
-    step2Send: "2. Envía tu orden para confirmar",
-    sendWhatsapp: "Enviar orden por WhatsApp",
-    sendBackup: "Enviar a la línea de respaldo",
-    startNew: "Comenzar una orden nueva",
-    ddHandles: "DoorDash maneja tu nombre, dirección y pago en su sitio seguro. Toca abajo para enviar tu orden a la página de DoorDash de Sweet & Salao.",
-    continueDoordash: "Continuar en DoorDash",
-    buildOrder: "Arma tu orden",
-    checkoutLead: "Elige recoger en la ventana o entrega por DoorDash. Para recoger, envía el pago por Zelle o Cash App y te avisamos por mensaje cuando esté lista.",
-    orderFullDoordash: "Ordena el menú completo por DoorDash",
-    paymentForPickup: "Pago para recoger",
-    closedTitle: "Hoy Estamos Cerrados",
-    backOn: "Regresamos el",
-    at: "a las",
-    closedGotIt: "Entendido",
-    orderingDisabled: "No se pueden hacer pedidos mientras estamos cerrados."
-  }
-};
-
-export function getLang() {
-  return localStorage.getItem("ss_lang") || "en";
+/* ============================================================
+   Sweet & Salao — Owner Portal (admin)
+   Finesse Media build. Brand-aligned, professional, friendly.
+   ============================================================ */
+:root {
+  --pink: #ff2e88;
+  --pink-deep: #d81b6a;
+  --lime: #b6e021;
+  --lime-deep: #7fa600;
+  --turq: #16c2c2;
+  --turq-deep: #0c8f8f;
+  --sun: #ffc01e;
+  --grape: #6b2d8f;
+  --ink: #2a1430;
+  --ink-soft: #6a5566;
+  --cream: #fff6ec;
+  --paper: #ffffff;
+  --line: #ece0d4;
+  --line-strong: #ddc9b8;
+  --ok: #2a9d5c;
+  --warn: #d8861b;
+  --shadow-sm: 0 4px 14px rgba(122, 28, 92, 0.08);
+  --shadow: 0 18px 44px rgba(122, 28, 92, 0.14);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --display: "Fraunces", Georgia, serif;
+  --body: "Outfit", ui-sans-serif, system-ui, sans-serif;
 }
-export function setLang(lang) {
-  localStorage.setItem("ss_lang", lang === "es" ? "es" : "en");
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; font-family: var(--body); color: var(--ink);
+  background: var(--cream);
+  background-image:
+    radial-gradient(circle at 8% 4%, rgba(255,46,136,.06), transparent 40%),
+    radial-gradient(circle at 92% 2%, rgba(22,194,194,.07), transparent 38%);
+  -webkit-font-smoothing: antialiased;
+}
+h1,h2,h3,h4 { font-family: var(--display); font-weight: 900; margin: 0; line-height: 1.05; }
+p { margin: 0; }
+img { display: block; max-width: 100%; }
+button { font-family: var(--body); cursor: pointer; }
+input, textarea, select { font-family: var(--body); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-weight: 800; font-size: 14px; padding: 11px 18px; border-radius: 999px;
+  border: 2px solid transparent; transition: transform .15s ease, box-shadow .15s ease, filter .15s ease, background .15s;
+  white-space: nowrap;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-primary { background: linear-gradient(135deg, var(--pink), var(--pink-deep)); color: #fff; box-shadow: 0 8px 20px rgba(255,46,136,.3); }
+.btn-lime { background: linear-gradient(135deg, var(--lime), var(--lime-deep)); color: var(--ink); box-shadow: 0 8px 20px rgba(140,184,0,.28); }
+.btn-ghost { background: var(--paper); color: var(--ink); border-color: var(--line-strong); }
+.btn-ghost:hover { border-color: var(--pink); color: var(--pink-deep); }
+.btn-danger { background: #fff; color: var(--pink-deep); border-color: #f3c6d8; }
+.btn-danger:hover { background: var(--pink-deep); color: #fff; border-color: var(--pink-deep); }
+.btn-sm { padding: 8px 13px; font-size: 13px; }
+.btn-block { width: 100%; }
+
+/* ---------- Login screen ---------- */
+.login-wrap {
+  min-height: 100vh; display: grid; place-items: center; padding: 24px;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255,46,136,.55), transparent 45%),
+    radial-gradient(circle at 85% 12%, rgba(182,224,33,.45), transparent 42%),
+    radial-gradient(circle at 78% 82%, rgba(22,194,194,.5), transparent 45%),
+    radial-gradient(circle at 22% 85%, rgba(255,192,30,.4), transparent 45%),
+    linear-gradient(135deg, #6b2d8f 0%, #1c2640 38%, #6b2d8f 64%, #d81b6a 100%);
+  background-attachment: fixed;
+}
+.login-back {
+  display: inline-block; margin-top: 16px; font-size: 13.5px; font-weight: 700;
+  color: var(--ink-soft); text-decoration: none; transition: color .15s;
+}
+.login-back:hover { color: var(--pink-deep); }
+.login-card {
+  width: min(440px, 100%); background: var(--paper); border-radius: 26px;
+  box-shadow: var(--shadow); padding: 40px 34px; text-align: center; border: 1px solid var(--line);
+}
+.login-logo { height: 120px; margin: 0 auto 18px; filter: drop-shadow(0 8px 18px rgba(122,28,92,.18)); }
+.login-card .eyebrow { color: var(--pink); letter-spacing: .22em; text-transform: uppercase; font-size: 11.5px; font-weight: 800; }
+.login-card h1 { font-size: 30px; margin: 6px 0 22px; }
+.login-card input {
+  width: 100%; padding: 14px 16px; border-radius: var(--radius-sm); border: 2px solid var(--line-strong);
+  font-size: 15px; background: var(--cream); margin-bottom: 12px; transition: border-color .15s;
+}
+.login-card input:focus { outline: none; border-color: var(--turq); background: #fff; }
+.login-hint { font-size: 12.5px; color: var(--ink-soft); margin-top: 14px; line-height: 1.5; }
+.login-hint.err { color: var(--pink-deep); font-weight: 700; }
+
+/* ---------- Top bar ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 16px;
+  background: rgba(255,246,236,.9); backdrop-filter: blur(12px) saturate(1.2);
+  border-bottom: 1px solid var(--line); padding: 12px clamp(16px, 3vw, 32px);
+}
+.topbar-logo { height: 42px; }
+.topbar-title { display: flex; flex-direction: column; line-height: 1.1; }
+.topbar-title strong { font-family: var(--display); font-weight: 900; font-size: 18px; }
+.topbar-title span { font-size: 11px; color: var(--ink-soft); letter-spacing: .14em; text-transform: uppercase; }
+.topbar-spacer { flex: 1; }
+.save-pill {
+  font-size: 12.5px; font-weight: 800; padding: 7px 14px; border-radius: 999px;
+  background: #eef7e1; color: var(--lime-deep); border: 1px solid #d6ecb0; white-space: nowrap;
+}
+.save-pill.unsaved { background: #fdf1dd; color: var(--warn); border-color: #f4dcae; }
+.save-pill.saved { background: #e3f6ec; color: var(--ok); border-color: #b9e6cd; }
+.save-pill.error { background: #fde3ec; color: var(--pink-deep); border-color: #f4c2d6; }
+
+/* ---------- Language toggle ---------- */
+.lang-toggle { display: inline-flex; background: var(--paper); border: 2px solid var(--line-strong); border-radius: 999px; overflow: hidden; }
+.lang-toggle button { border: none; background: transparent; padding: 6px 14px; font-weight: 800; font-size: 13px; color: var(--ink-soft); transition: all .15s; }
+.lang-toggle button.active { background: var(--ink); color: #fff; }
+
+/* ---------- Layout ---------- */
+.shell { display: grid; grid-template-columns: 230px 1fr; gap: 0; min-height: calc(100vh - 67px); }
+.sidebar { padding: 22px 16px; border-right: 1px solid var(--line); position: sticky; top: 67px; align-self: start; height: calc(100vh - 67px); }
+.sidebar nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 12px;
+  text-decoration: none; color: var(--ink); font-weight: 700; font-size: 14.5px; transition: background .15s, color .15s;
+}
+.sidebar nav a:hover { background: #fff; }
+.sidebar nav a.active { background: linear-gradient(135deg, var(--pink), var(--pink-deep)); color: #fff; box-shadow: 0 6px 16px rgba(255,46,136,.28); }
+.sidebar nav a .ico { width: 20px; text-align: center; }
+.sidebar-foot { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+
+.main { padding: clamp(20px, 3vw, 40px); max-width: 1080px; }
+.page-head { margin-bottom: 24px; }
+.page-head .eyebrow { color: var(--pink); letter-spacing: .2em; text-transform: uppercase; font-size: 11.5px; font-weight: 800; }
+.page-head h2 { font-size: clamp(28px, 4vw, 40px); margin-top: 4px; }
+.page-head p { color: var(--ink-soft); margin-top: 6px; font-size: 15px; }
+
+/* ---------- Cards / panels ---------- */
+.panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 22px; scroll-margin-top: 80px; }
+.panel-head { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.panel-head h3 { font-size: 21px; }
+.panel-head .ico { font-size: 20px; }
+.panel-head .spacer { flex: 1; }
+
+/* ---------- Form fields with labels + tooltips ---------- */
+.field { margin-bottom: 16px; }
+.field:last-child { margin-bottom: 0; }
+.field-label { display: flex; align-items: center; gap: 7px; font-weight: 700; font-size: 13.5px; margin-bottom: 6px; color: var(--ink); }
+.field input, .field textarea, .field select {
+  width: 100%; padding: 12px 14px; border-radius: var(--radius-sm); border: 2px solid var(--line-strong);
+  font-size: 14.5px; background: var(--cream); color: var(--ink); transition: border-color .15s, background .15s;
+}
+.field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--turq); background: #fff; }
+.field textarea { min-height: 80px; resize: vertical; line-height: 1.5; }
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+/* Tooltip (bilingual help) */
+.tip { position: relative; display: inline-flex; }
+.tip-dot {
+  width: 16px; height: 16px; border-radius: 50%; background: var(--turq); color: #fff;
+  font-size: 11px; font-weight: 800; display: grid; place-items: center; cursor: help; flex: none;
+}
+.tip-bubble {
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%) translateY(4px);
+  width: max-content; max-width: 260px; background: var(--ink); color: #fff; font-weight: 500;
+  font-size: 12.5px; line-height: 1.45; padding: 9px 12px; border-radius: 10px; box-shadow: var(--shadow);
+  opacity: 0; visibility: hidden; transition: opacity .16s, transform .16s; z-index: 40; text-align: left;
+}
+.tip-bubble::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--ink); }
+.tip:hover .tip-bubble, .tip:focus-within .tip-bubble { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+
+/* ---------- Menu item editor ---------- */
+.items-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.items-search { flex: 1; min-width: 180px; padding: 10px 14px; border-radius: 999px; border: 2px solid var(--line-strong); background: var(--cream); font-size: 14px; }
+.items-search:focus { outline: none; border-color: var(--turq); background: #fff; }
+.item-card { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 14px; background: #fffdfb; transition: box-shadow .15s; }
+.item-card:hover { box-shadow: var(--shadow-sm); }
+.item-card.unavailable { opacity: .62; }
+.item-row { display: grid; grid-template-columns: 64px 1fr auto; gap: 14px; align-items: start; }
+.item-thumb { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; background: var(--cream); border: 1px solid var(--line); }
+.item-thumb.empty { display: grid; place-items: center; font-size: 22px; color: var(--line-strong); }
+.item-image-col { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 64px; }
+.item-image-actions { display: flex; align-items: center; gap: 4px; }
+.btn-img-upload {
+  border: 1.5px solid var(--turq); background: #fff; color: var(--turq-deep); font-family: var(--body);
+  font-weight: 800; font-size: 11px; padding: 4px 8px; border-radius: 8px; cursor: pointer; transition: all .15s;
+}
+.btn-img-upload:hover { background: var(--turq); color: #fff; }
+.btn-img-trash {
+  border: 1.5px solid #f3c6d8; background: #fff; color: var(--pink-deep); font-size: 12px;
+  width: 26px; height: 26px; border-radius: 8px; cursor: pointer; display: grid; place-items: center; transition: all .15s;
+}
+.btn-img-trash:hover { background: var(--pink-deep); color: #fff; border-color: var(--pink-deep); }
+.item-fields { display: flex; flex-direction: column; gap: 9px; }
+.item-fields .triple { display: grid; grid-template-columns: 2fr 1.4fr .8fr; gap: 9px; }
+.item-fields input, .item-fields textarea, .item-fields select {
+  padding: 9px 11px; border-radius: 9px; border: 1.5px solid var(--line-strong); font-size: 13.5px; background: #fff; width: 100%;
+}
+.item-fields textarea { min-height: 44px; resize: vertical; }
+.item-fields input:focus, .item-fields textarea:focus, .item-fields select:focus { outline: none; border-color: var(--turq); }
+.item-flags { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+.item-flags label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.item-actions { display: flex; flex-direction: column; gap: 7px; }
+
+/* ---------- Gallery editor ---------- */
+.gallery-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
+.gallery-row input { flex: 1; padding: 10px 12px; border-radius: 9px; border: 1.5px solid var(--line-strong); background: #fff; font-size: 13.5px; }
+.gallery-thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; border: 1px solid var(--line); flex: none; }
+
+/* ---------- Upload ---------- */
+.upload-box { border: 2px dashed var(--line-strong); border-radius: var(--radius-sm); padding: 20px; text-align: center; background: var(--cream); }
+.upload-box input[type=file] { font-size: 13px; }
+.uploaded-url { width: 100%; margin-top: 12px; padding: 10px 12px; border-radius: 9px; border: 1.5px solid var(--line-strong); background: #fff; font-size: 13px; }
+
+/* ---------- Publish bar ---------- */
+.publish-bar {
+  position: sticky; bottom: 0; z-index: 25; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  background: rgba(255,255,255,.94); backdrop-filter: blur(10px); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 16px 20px; box-shadow: var(--shadow); margin-top: 8px;
+}
+.publish-bar p { font-size: 12.5px; color: var(--ink-soft); flex: 1; min-width: 180px; }
+
+.hidden { display: none !important; }
+
+/* Away / availability toggle */
+.away-switch { display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; }
+.away-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.away-slider { position: relative; width: 56px; height: 30px; background: var(--line-strong); border-radius: 999px; transition: background .2s; flex: none; }
+.away-slider::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; background: #fff; border-radius: 50%; transition: transform .2s; box-shadow: 0 2px 6px rgba(0,0,0,.2); }
+.away-switch input:checked + .away-slider { background: var(--pink); }
+.away-switch input:checked + .away-slider::after { transform: translateX(26px); }
+.away-label { font-weight: 700; font-size: 15px; }
+.away-fields { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); }
+.away-warn { margin-top: 14px; font-size: 13px; font-weight: 600; color: var(--pink-deep); background: #fdf0f5; border: 1px solid #f4c8da; border-radius: 10px; padding: 11px 14px; line-height: 1.45; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 820px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
+  .sidebar nav { flex-direction: row; flex-wrap: wrap; }
+  .sidebar nav a { padding: 9px 12px; font-size: 13px; }
+  .sidebar-foot { flex-direction: row; }
+  .field-grid, .field-grid-3 { grid-template-columns: 1fr; }
+  .item-row { grid-template-columns: 1fr; }
+  .item-fields .triple { grid-template-columns: 1fr; }
 }

@@ -1,77 +1,300 @@
-# Sweet & Salao — Deploy & Setup Guide
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Sweet & Salao — Owner Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/admin.css">
+    <link rel="icon" type="image/png" href="/assets/sweet-salao-logo.png">
+    <script type="module" src="/admin.js"></script>
+  </head>
+  <body>
+    <!-- LOGIN -->
+    <div class="login-wrap" id="login-panel">
+      <div class="login-card">
+        <img class="login-logo" src="/assets/sweet-salao-logo.png" alt="Sweet & Salao">
+        <p class="eyebrow" data-i18n="ownerPortal">Owner Portal</p>
+        <h1>Sweet &amp; Salao</h1>
+        <form id="login-form">
+          <input name="password" type="password" data-i18n-ph="adminPassword" placeholder="Admin password" autocomplete="current-password" required>
+          <button class="btn btn-primary btn-block" type="submit" data-i18n="logIn">Log In</button>
+        </form>
+        <p class="login-hint" id="login-status" data-i18n="loginHint">Enter the password set in your Netlify environment variables.</p>
+        <div class="lang-toggle" style="margin-top:18px">
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="es">ES</button>
+        </div>
+        <a class="login-back" href="/" data-i18n="backToSite">← Back to site</a>
+      </div>
+    </div>
 
-## 1. Fixing the blank page on sweetnsalao.com
+    <!-- APP -->
+    <div class="hidden" id="admin-shell">
+      <header class="topbar">
+        <img class="topbar-logo" src="/assets/sweet-salao-logo.png" alt="">
+        <div class="topbar-title">
+          <strong>Sweet &amp; Salao</strong>
+          <span data-i18n="ownerPortal">Owner Portal</span>
+        </div>
+        <div class="topbar-spacer"></div>
+        <span class="save-pill" id="save-status" data-i18n="loadedDefaults">Loaded defaults</span>
+        <div class="lang-toggle">
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="es">ES</button>
+        </div>
+      </header>
 
-The website code is healthy. A blank page on the custom domain almost always means the
-domain is not fully connected to the Netlify site (DNS or SSL not finished). Work through
-this in order:
+      <div class="shell">
+        <aside class="sidebar">
+          <nav>
+            <a href="#availability" class="active"><span class="ico">🚦</span> <span data-i18n="availability">Availability</span></a>
+            <a href="#business"><span class="ico">🏪</span> <span data-i18n="business">Business</span></a>
+            <a href="#menu-admin"><span class="ico">🍽️</span> <span data-i18n="menu">Menu</span></a>
+            <a href="#ordering"><span class="ico">💳</span> <span data-i18n="checkout">Checkout</span></a>
+            <a href="#copy"><span class="ico">✍️</span> <span data-i18n="pageCopy">Page Copy</span></a>
+            <a href="#reviews-admin"><span class="ico">⭐</span> <span data-i18n="reviewsAdminTitle">Reviews</span></a>
+            <a href="#media"><span class="ico">🖼️</span> <span data-i18n="images">Images</span></a>
+            <a href="#gallery-panel"><span class="ico">📸</span> <span data-i18n="gallery">Gallery</span></a>
+          </nav>
+          <div class="sidebar-foot">
+            <a class="btn btn-ghost btn-sm" href="/" target="_blank" rel="noopener" data-i18n="viewSite">View Site</a>
+            <button class="btn btn-ghost btn-sm" id="logout-button" type="button" data-i18n="logOut">Log Out</button>
+          </div>
+        </aside>
 
-### Step 1 — Confirm the deploy itself works
-1. Netlify dashboard -> your site -> **Deploys**. Latest should say **Published**.
-2. Click the auto-generated URL at the top (looks like `name-12345.netlify.app`).
-3. If that URL shows the site, the code/deploy is fine and the problem is the domain (Step 2).
+        <main class="main">
+          <div class="page-head">
+            <p class="eyebrow" data-i18n="dashboard">Dashboard</p>
+            <h2 data-i18n="siteEditor">Site Editor</h2>
+            <p data-i18n="siteEditorSub">Update your menu, prices, photos, and business info. Changes go live when you publish.</p>
+          </div>
 
-### Step 2 — Connect the custom domain
-1. Netlify -> **Domain management** -> add `sweetnsalao.com` and `www.sweetnsalao.com`.
-2. At your domain registrar, point DNS to Netlify, EITHER:
-   - Use **Netlify DNS** (change nameservers to the ones Netlify lists), OR
-   - Add an **A record** for the root domain to `75.2.60.5`
-     and a **CNAME** for `www` to your `name-12345.netlify.app`.
-3. Wait for **HTTPS/SSL** to provision (Netlify does this automatically once DNS resolves;
-   can take 15 minutes to a few hours). The "Not secure" warning disappears when this finishes.
+          <!-- AVAILABILITY -->
+          <section class="panel" id="availability">
+            <div class="panel-head"><span class="ico">🚦</span><h3 data-i18n="availabilityTitle">Availability</h3></div>
+            <label class="away-switch">
+              <input type="checkbox" id="away-toggle" data-path="availability.away">
+              <span class="away-slider"></span>
+              <span class="away-label" data-i18n="awayLabel">Mark the truck as closed today</span>
+            </label>
+            <div id="away-fields" class="away-fields" hidden>
+              <div class="field">
+                <label class="field-label"><span data-i18n="closedMsgEn">Closed message (English)</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_closedMsg"></span></span></label>
+                <textarea data-path="availability.message"></textarea>
+              </div>
+              <div class="field">
+                <label class="field-label"><span data-i18n="closedMsgEs">Closed message (Spanish)</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_closedMsg"></span></span></label>
+                <textarea data-path="availability.message_es"></textarea>
+              </div>
+              <div class="field-grid">
+                <div class="field">
+                  <label class="field-label"><span data-i18n="backDate">Back open date</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_backDate"></span></span></label>
+                  <input type="date" data-path="availability.backDate">
+                </div>
+                <div class="field">
+                  <label class="field-label"><span data-i18n="backTime">Back open time</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_backTime"></span></span></label>
+                  <input type="time" data-path="availability.backTime">
+                </div>
+              </div>
+              <p class="away-warn" data-i18n="awayWarn">While closed is on and published, customers cannot place any orders (pickup, WhatsApp, or DoorDash).</p>
+            </div>
+          </section>
 
-### Step 3 — If the .netlify.app URL is ALSO blank
-This means the ordering functions did not bundle. Use a Git deploy instead of drag-and-drop
-(see Section 3), because the backend needs `npm install` to run, which drag-and-drop skips.
+          <!-- BUSINESS -->
+          <section class="panel" id="business">
+            <div class="panel-head"><span class="ico">🏪</span><h3 data-i18n="businessDetails">Business Details</h3></div>
+            <div class="field-grid">
+              <div class="field">
+                <label class="field-label"><span data-i18n="bizName">Business name</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_bizName"></span></span></label>
+                <input data-path="business.name">
+              </div>
+              <div class="field">
+                <label class="field-label"><span data-i18n="tagline">Tagline</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_tagline"></span></span></label>
+                <input data-path="business.tagline">
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label"><span data-i18n="intro">Intro paragraph</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_intro"></span></span></label>
+              <textarea data-path="business.intro"></textarea>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label class="field-label"><span data-i18n="phone">Phone</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_phone"></span></span></label>
+                <input data-path="business.phone">
+              </div>
+              <div class="field">
+                <label class="field-label"><span data-i18n="email">Email</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_email"></span></span></label>
+                <input data-path="business.email">
+              </div>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label class="field-label"><span data-i18n="serviceArea">Service area</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_serviceArea"></span></span></label>
+                <input data-path="business.location">
+              </div>
+              <div class="field">
+                <label class="field-label"><span data-i18n="hours">Hours (legacy note)</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_hours"></span></span></label>
+                <input data-path="business.hours">
+              </div>
+            </div>
 
----
+            <div class="panel-head" style="margin-top:18px"><span class="ico">🕒</span><h3 data-i18n="hoursScheduleTitle">Weekly Hours</h3></div>
+            <p class="login-hint" style="text-align:left" data-i18n="hoursScheduleHint"></p>
+            <div class="field-grid">
+              <div class="field"><label class="field-label"><span data-i18n="dayMon">Monday</span></label><input data-path="business.hoursSchedule.mon"></div>
+              <div class="field"><label class="field-label"><span data-i18n="dayTue">Tuesday</span></label><input data-path="business.hoursSchedule.tue"></div>
+              <div class="field"><label class="field-label"><span data-i18n="dayWed">Wednesday</span></label><input data-path="business.hoursSchedule.wed"></div>
+              <div class="field"><label class="field-label"><span data-i18n="dayThu">Thursday</span></label><input data-path="business.hoursSchedule.thu"></div>
+              <div class="field"><label class="field-label"><span data-i18n="dayFri">Friday</span></label><input data-path="business.hoursSchedule.fri"></div>
+              <div class="field"><label class="field-label"><span data-i18n="daySat">Saturday</span></label><input data-path="business.hoursSchedule.sat"></div>
+              <div class="field"><label class="field-label"><span data-i18n="daySun">Sunday</span></label><input data-path="business.hoursSchedule.sun"></div>
+            </div>
 
-## 2. The site works WITHOUT a backend
+            <div class="panel-head" style="margin-top:18px"><span class="ico">📍</span><h3 data-i18n="addressTitle">Truck Location</h3></div>
+            <div class="field-grid">
+              <div class="field"><label class="field-label"><span data-i18n="addrPlacedAt">Located in / landmark</span></label><input data-path="business.address.placedAt"></div>
+              <div class="field"><label class="field-label"><span data-i18n="addrStreet">Street address</span></label><input data-path="business.address.street"></div>
+            </div>
+            <div class="field-grid">
+              <div class="field"><label class="field-label"><span data-i18n="addrCityStateZip">City, State ZIP</span></label><input data-path="business.address.cityStateZip"></div>
+              <div class="field"><label class="field-label"><span data-i18n="addrMapUrl">Google Maps link (optional)</span></label><input data-path="business.address.mapUrl"></div>
+            </div>
 
-The menu, cart, checkout, payment QR codes, and WhatsApp ordering all work as a pure static
-site. The Netlify Functions only add: the admin editor and automatic email/SMS notifications.
-If functions are not running, customers can still order (WhatsApp + payment still work).
+            <div class="panel-head" style="margin-top:18px"><span class="ico">🔗</span><h3 data-i18n="socialTitle">Social Links</h3></div>
+            <div class="field-grid">
+              <div class="field"><label class="field-label"><span data-i18n="socialFb">Facebook URL</span></label><input data-path="business.social.facebook"></div>
+              <div class="field"><label class="field-label"><span data-i18n="socialIg">Instagram URL</span></label><input data-path="business.social.instagram"></div>
+            </div>
 
----
+            <div class="field-grid">
+              <div class="field">
+                <label class="field-label"><span data-i18n="logoUrl">Logo image URL</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_logoUrl"></span></span></label>
+                <input data-path="business.logoImage">
+              </div>
+              <div class="field">
+                <label class="field-label"><span data-i18n="heroUrl">Hero image URL</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_heroUrl"></span></span></label>
+                <input data-path="business.heroImage">
+              </div>
+            </div>
+          </section>
 
-## 3. Two ways to deploy
+          <!-- MENU -->
+          <section class="panel" id="menu-admin">
+            <div class="panel-head"><span class="ico">🍽️</span><h3 data-i18n="menuItems">Menu Items</h3><span class="spacer"></span><button class="btn btn-lime btn-sm" id="add-product" type="button" data-i18n="addItem">Add Item</button></div>
+            <div class="items-toolbar">
+              <input class="items-search" id="items-search" data-i18n-ph="searchItems" placeholder="Search menu items…">
+            </div>
+            <div id="product-editor"></div>
+          </section>
 
-### A) Drag-and-drop (simplest, static only)
-Drag the unzipped folder onto Netlify. Menu + ordering + WhatsApp + QR all work.
-The admin editor and auto-email/SMS will NOT work this way (functions need npm install).
+          <!-- CHECKOUT -->
+          <section class="panel" id="ordering">
+            <div class="panel-head"><span class="ico">💳</span><h3 data-i18n="checkoutSettings">Checkout Settings</h3></div>
+            <div class="field-grid-3">
+              <div class="field">
+                <label class="field-label"><span data-i18n="zelle">Zelle email or phone</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_zelle"></span></span></label>
+                <input data-path="ordering.zelleHandle">
+              </div>
+              <div class="field">
+                <label class="field-label"><span data-i18n="cashapp">Cash App handle</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_cashapp"></span></span></label>
+                <input data-path="ordering.cashAppHandle">
+              </div>
+              <div class="field">
+                <label class="field-label"><span data-i18n="doordash">DoorDash URL</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_doordash"></span></span></label>
+                <input data-path="ordering.doorDashStoreUrl">
+              </div>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label class="field-label"><span data-i18n="pickupInstr">Pickup instructions</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_pickupInstr"></span></span></label>
+                <textarea data-path="ordering.pickupInstructions"></textarea>
+              </div>
+              <div class="field">
+                <label class="field-label"><span data-i18n="doordashInstr">DoorDash instructions</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_doordashInstr"></span></span></label>
+                <textarea data-path="ordering.doorDashInstructions"></textarea>
+              </div>
+            </div>
+          </section>
 
-### B) Git-connected (recommended — enables everything)
-1. Push this folder to a GitHub repo.
-2. Netlify -> Add new site -> Import from Git -> pick the repo.
-3. Build command: leave blank. Publish directory: `.` (root).
-4. Netlify auto-installs dependencies and bundles the functions.
+          <!-- COPY -->
+          <section class="panel" id="copy">
+            <div class="panel-head"><span class="ico">✍️</span><h3 data-i18n="pageCopy">Page Copy</h3></div>
+            <div class="field-grid">
+              <div class="field">
+                <label class="field-label"><span data-i18n="menuTitle">Menu section title</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_menuTitle"></span></span></label>
+                <input data-path="sections.featuredTitle">
+              </div>
+              <div class="field">
+                <label class="field-label"><span data-i18n="storyTitle">Story title</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_storyTitle"></span></span></label>
+                <input data-path="sections.storyTitle">
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label"><span data-i18n="storyText">Story text</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_storyText"></span></span></label>
+              <textarea data-path="sections.storyText"></textarea>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label class="field-label"><span data-i18n="seoTitle">SEO title</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_seoTitle"></span></span></label>
+                <input data-path="seo.title">
+              </div>
+              <div class="field">
+                <label class="field-label"><span data-i18n="seoDesc">SEO description</span><span class="tip"><span class="tip-dot">?</span><span class="tip-bubble" data-i18n="tip_seoDesc"></span></span></label>
+                <textarea data-path="seo.description"></textarea>
+              </div>
+            </div>
+          </section>
 
----
+          <!-- REVIEWS -->
+          <section class="panel" id="reviews-admin">
+            <div class="panel-head"><span class="ico">⭐</span><h3 data-i18n="reviewsAdminTitle">Reviews</h3><span class="spacer"></span><button class="btn btn-lime btn-sm" id="add-review" type="button" data-i18n="addReview">Add Review</button></div>
+            <div class="field">
+              <label class="field-label"><span data-i18n="reviewUrlLabel">Google review link</span></label>
+              <input data-path="reviews.reviewUrl" data-i18n-ph="reviewUrlPh" placeholder="https://g.page/r/your-code/review">
+              <p class="login-hint" style="text-align:left" data-i18n="reviewUrlHint"></p>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label class="field-label"><span data-i18n="reviewSecTitleEn">Section title (English)</span></label>
+                <input data-path="reviews.title">
+              </div>
+              <div class="field">
+                <label class="field-label"><span data-i18n="reviewSecTitleEs">Section title (Spanish)</span></label>
+                <input data-path="reviews.titleEs">
+              </div>
+            </div>
+            <div id="reviews-editor"></div>
+          </section>
 
-## 4. Turning on order notifications (the trifecta)
+          <!-- IMAGES -->
+          <section class="panel" id="media">
+            <div class="panel-head"><span class="ico">🖼️</span><h3 data-i18n="imageUpload">Image Upload</h3></div>
+            <div class="upload-box">
+              <input id="upload-input" type="file" accept="image/png,image/jpeg,image/webp">
+              <div style="margin-top:12px"><button class="btn btn-lime btn-sm" id="upload-button" type="button" data-i18n="uploadImage">Upload Image</button></div>
+              <input class="uploaded-url" id="uploaded-url" readonly data-i18n-ph="uploadedUrl" placeholder="Uploaded image URL">
+            </div>
+            <p class="login-hint" style="text-align:left" data-i18n="uploadHint"></p>
+          </section>
 
-Orders always reach the truck by **WhatsApp** (free, built in — the customer taps "Send order
-on WhatsApp" after paying). To also get **email** and **SMS**, add these environment variables
-in Netlify -> Site settings -> Environment variables:
+          <!-- GALLERY -->
+          <section class="panel" id="gallery-panel">
+            <div class="panel-head"><span class="ico">📸</span><h3 data-i18n="galleryImages">Gallery Images</h3><span class="spacer"></span><button class="btn btn-lime btn-sm" id="add-gallery" type="button" data-i18n="addGalleryImage">Add Gallery Image</button></div>
+            <div id="gallery-editor"></div>
+          </section>
 
-### Email (free tier via Resend.com)
-- `RESEND_API_KEY` = your Resend API key (this is the ONE thing required to turn email on)
-- `ORDER_EMAIL_TO` = optional. Orders already go to sweetandsalaobychefcarmen@gmail.com by default. Set this only to change or add recipients (comma-separate for more than one).
-- `ORDER_EMAIL_FROM` = a verified sender (e.g. orders@sweetandsalao.com)
-
-### SMS (paid — Twilio; optional, switch on when ready)
-- `TWILIO_ACCOUNT_SID`
-- `TWILIO_AUTH_TOKEN`
-- `TWILIO_FROM` = your Twilio number, e.g. +1386XXXXXXX
-- `ORDER_SMS_TO` = 13862156720,13862156381 (comma-separated; both lines)
-
-Every notification includes the **payment method the customer chose** (Zelle or Cash App),
-the full item list, total, and the customer's name + phone, so Chef Carmen can confirm
-payment before cooking.
-
----
-
-## 5. Payment QR codes
-- Cash App QR -> opens cash.app/$SweetSalao (fully working).
-- Zelle QR -> encodes 386-215-6720. For the most reliable Zelle experience, you can replace
-  `/assets/qr-zelle.png` with the official "My Zelle QR code" exported from the bank app.
+          <!-- PUBLISH -->
+          <div class="publish-bar">
+            <button class="btn btn-primary" id="save-button" type="button" data-i18n="publishChanges">Publish Changes</button>
+            <a class="btn btn-ghost" href="/" target="_blank" rel="noopener" data-i18n="viewSite">View Site</a>
+            <p data-i18n="publishNote">Publishing updates your live site content. It does not change the source code.</p>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
