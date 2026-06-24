@@ -1,13 +1,8 @@
-import { json, requireAdmin } from "./lib/auth.js";
-import { readContent, sanitizeContent, writeContent } from "./lib/store.js";
+import { createSessionCookie, json, verifyPassword } from "./lib/auth.js";
 
 export default async (request) => {
-  if (request.method === "GET") {
-    return json({ content: await readContent() });
-  }
   if (request.method !== "POST") return json({ error: "Method not allowed." }, 405);
-  if (!requireAdmin(request)) return json({ error: "Admin session required." }, 401);
-  const body = await request.json().catch(() => ({}));
-  const payload = await writeContent(sanitizeContent(body.content));
-  return json({ ok: true, updatedAt: payload.updatedAt });
+  const { password = "" } = await request.json().catch(() => ({}));
+  if (!verifyPassword(password)) return json({ error: "Invalid admin password or missing SWEET_SALAO_ADMIN_PASSWORD." }, 401);
+  return json({ ok: true }, 200, { "Set-Cookie": createSessionCookie(request) });
 };

@@ -1,110 +1,135 @@
-import { json } from "./lib/auth.js";
-import { readContent, writeOrder } from "./lib/store.js";
+import { getStore } from "@netlify/blobs";
+import crypto from "node:crypto";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { defaultContent } from "../../../defaults.js";
 
-export default async (request) => {
-  if (request.method !== "POST") return json({ error: "Method not allowed." }, 405);
-  const body = await request.json().catch(() => ({}));
-  const content = await readContent();
-  const products = new Map((content.products || []).map((item) => [item.id, item]));
-  const items = Array.isArray(body.items) ? body.items.map((item) => {
-    const product = products.get(item.id);
-    if (!product || !product.available || product.marketPrice || !Number.isFinite(Number(product.price))) return null;
-    const quantity = Math.max(1, Math.min(20, Number(item.quantity || 1)));
-    return { id: product.id, name: product.name, price: Number(product.price), quantity };
-  }).filter(Boolean) : [];
-  if (!items.length) return json({ error: "No available menu items were submitted." }, 400);
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const customer = sanitizeCustomer(body.customer);
-  if (!customer.name || !customer.phone) return json({ error: "Name and phone are required." }, 400);
-  const fulfillment = body.fulfillment === "doordash" ? "doordash" : "pickup";
-  const payment = ["zelle", "cashapp"].includes(body.payment) ? body.payment : null;
+const CONTENT_KEY = "live";
+const ORDER_PREFIX = "orders/";
+const DATA_DIR = path.join(process.cwd(), ".data");
+const CONTENT_FILE = path.join(DATA_DIR, "content.json");
+const ORDERS_FILE = path.join(DATA_DIR, "orders.json");
 
-  const order = await writeOrder({ customer, fulfillment, payment, items, total });
-
-  // Fire notifications (email + SMS) without blocking the customer response.
-  const notify = buildNotification({ order, customer, fulfillment, payment, items, total });
-  await Promise.allSettled([
-    sendEmail(notify),
-    sendSms(notify)
-  ]);
-
-  return json({
-    ok: true,
-    orderId: order.id,
-    message: fulfillment === "doordash"
-      ? "Order submitted. Complete delivery through DoorDash if prompted."
-      : "Order placed! Your order is NOT confirmed until Chef Carmen verifies your payment. Send your payment now using the button below, then tap WhatsApp to notify us. We'll confirm and start cooking once the payment lands."
-  });
-};
-
-function buildNotification({ order, customer, fulfillment, payment, items, total }) {
-  const lines = items.map((i) => `  ${i.quantity}x ${i.name} ($${(i.price * i.quantity).toFixed(2)})`).join("\n");
-  const payLabel = payment === "zelle" ? "ZELLE" : payment === "cashapp" ? "CASH APP" : "Not specified";
-  const method = fulfillment === "doordash" ? "DoorDash delivery" : "PICKUP at window";
-  const shortId = String(order.id).slice(-6).toUpperCase();
-  const payWarning = fulfillment === "doordash"
-    ? "Payment is handled by DoorDash for delivery orders."
-    : `*** DO NOT START COOKING YET ***
-Open your ${payLabel === "ZELLE" ? "Zelle" : payLabel === "CASH APP" ? "Cash App" : "payment"} app and confirm you actually received $${total.toFixed(2)} from this customer.
-A placed order does NOT mean payment was sent. Verify the money landed before preparing this order.`;
-  const text =
-`NEW SWEET & SALAO ORDER #${shortId}
-${method}
-PAYMENT: ${payLabel}
-
-${lines}
-
-TOTAL: $${total.toFixed(2)}
-
-Customer: ${customer.name}
-Phone: ${customer.phone}${customer.notes ? `\nNotes: ${customer.notes}` : ""}
-
-${payWarning}`;
-  const subject = `New Order #${shortId} — $${total.toFixed(2)} — ${payLabel} (${fulfillment === "doordash" ? "DoorDash" : "Pickup"})`;
-  return { text, subject, shortId };
-}
-
-// Email via Resend (free tier). Sends to the owner for every order.
-async function sendEmail({ subject, text }) {
-  const key = process.env.RESEND_API_KEY;
-  // Owner notification inbox. Env var ORDER_EMAIL_TO can override/add more (comma-separated).
-  const to = process.env.ORDER_EMAIL_TO || "sweetandsalaobychefcarmen@gmail.com";
-  const from = process.env.ORDER_EMAIL_FROM || "orders@send.sweetnsalao.com";
-  if (!key || !to) return;
-  await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { "Authorization": `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from, to: to.split(",").map((s) => s.trim()), subject, text })
-  }).catch(() => {});
-}
-
-// SMS via Twilio. No-op if env vars are not set (owner switches on when ready).
-async function sendSms({ text }) {
-  const sid = process.env.TWILIO_ACCOUNT_SID;
-  const token = process.env.TWILIO_AUTH_TOKEN;
-  const from = process.env.TWILIO_FROM;
-  const to = process.env.ORDER_SMS_TO;
-  if (!sid || !token || !from || !to) return;
-  const auth = Buffer.from(`${sid}:${token}`).toString("base64");
-  for (const dest of to.split(",").map((s) => s.trim())) {
-    const params = new URLSearchParams({ From: from, To: dest, Body: text.slice(0, 1500) });
-    await fetch(`https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {
-      method: "POST",
-      headers: { "Authorization": `Basic ${auth}`, "Content-Type": "application/x-www-form-urlencoded" },
-      body: params.toString()
-    }).catch(() => {});
+export async function readContent() {
+  try {
+    const store = getStore("sweet-salao-content");
+    const live = await store.get(CONTENT_KEY, { type: "json" });
+    return live?.content ? live.content : live || defaultContent;
+  } catch {
+    try {
+      const raw = await fs.readFile(CONTENT_FILE, "utf8");
+      return JSON.parse(raw).content;
+    } catch {
+      return defaultContent;
+    }
   }
 }
 
-function sanitizeCustomer(customer = {}) {
+export async function writeContent(content) {
+  const payload = { content, updatedAt: new Date().toISOString() };
+  try {
+    const store = getStore("sweet-salao-content");
+    await store.setJSON(CONTENT_KEY, payload);
+  } catch {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    await fs.writeFile(CONTENT_FILE, JSON.stringify(payload, null, 2));
+  }
+  return payload;
+}
+
+export async function writeOrder(order) {
+  const payload = { ...order, id: crypto.randomUUID(), createdAt: new Date().toISOString() };
+  try {
+    const store = getStore("sweet-salao-orders");
+    await store.setJSON(`${ORDER_PREFIX}${payload.id}`, payload);
+  } catch {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    let orders = [];
+    try {
+      orders = JSON.parse(await fs.readFile(ORDERS_FILE, "utf8"));
+    } catch {
+      orders = [];
+    }
+    orders.push(payload);
+    await fs.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2));
+  }
+  return payload;
+}
+
+export async function writeMedia({ key, bytes, type }) {
+  try {
+    const store = getStore("sweet-salao-media");
+    await store.set(key, bytes, {
+      metadata: { type },
+      contentType: type
+    });
+  } catch {
+    await fs.mkdir(path.join(DATA_DIR, "media"), { recursive: true });
+    await fs.writeFile(path.join(DATA_DIR, "media", key), bytes);
+  }
+}
+
+export async function readMedia(key) {
+  try {
+    const store = getStore("sweet-salao-media");
+    const blob = await store.get(key, { type: "arrayBuffer" });
+    if (!blob) return null;
+    return { bytes: Buffer.from(blob), type: mimeFromName(key) };
+  } catch {
+    try {
+      const bytes = await fs.readFile(path.join(DATA_DIR, "media", key));
+      return { bytes, type: mimeFromName(key) };
+    } catch {
+      return null;
+    }
+  }
+}
+
+export function sanitizeContent(input) {
+  const safe = sanitizeValue(input || {});
+  safe.products = Array.isArray(safe.products) ? safe.products.map(sanitizeProduct).filter((item) => item.name) : [];
+  safe.gallery = Array.isArray(safe.gallery) ? safe.gallery.map(asString).filter(Boolean).slice(0, 12) : [];
+  return safe;
+}
+
+function sanitizeProduct(product) {
+  const hasPrice = product.price !== null && product.price !== undefined && product.price !== "" && Number.isFinite(Number(product.price));
   return {
-    name: clean(customer.name).slice(0, 80),
-    phone: clean(customer.phone).slice(0, 40),
-    address: clean(customer.address).slice(0, 180),
-    notes: clean(customer.notes).slice(0, 400)
+    id: slug(product.id || product.name || crypto.randomUUID()),
+    name: asString(product.name).slice(0, 80),
+    category: asString(product.category || "Menu").slice(0, 40),
+    price: hasPrice ? Math.max(0, Number(product.price)) : null,
+    description: asString(product.description).slice(0, 400),
+    description_es: asString(product.description_es).slice(0, 400),
+    note: product.note ? asString(product.note).slice(0, 200) : undefined,
+    note_es: product.note_es ? asString(product.note_es).slice(0, 200) : undefined,
+    image: product.image ? asString(product.image).slice(0, 500) : null,
+    available: Boolean(product.available),
+    featured: Boolean(product.featured),
+    marketPrice: Boolean(product.marketPrice)
   };
 }
 
-function clean(value) {
+function asString(value) {
   return String(value || "").replace(/[<>]/g, "").trim();
+}
+
+function sanitizeValue(value) {
+  if (Array.isArray(value)) return value.map(sanitizeValue);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, sanitizeValue(child)]));
+  }
+  if (typeof value === "string") return asString(value);
+  return value;
+}
+
+function slug(value) {
+  const clean = String(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  return clean || crypto.randomUUID();
+}
+
+function mimeFromName(name) {
+  if (name.endsWith(".png")) return "image/png";
+  if (name.endsWith(".webp")) return "image/webp";
+  return "image/jpeg";
 }

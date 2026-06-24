@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/admin.css">
     <link rel="icon" type="image/png" href="/assets/sweet-salao-logo.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script type="module" src="/admin.js"></script>
   </head>
   <body>
@@ -59,6 +60,7 @@
             <a href="#reviews-admin"><span class="ico">⭐</span> <span data-i18n="reviewsAdminTitle">Reviews</span></a>
             <a href="#media"><span class="ico">🖼️</span> <span data-i18n="images">Images</span></a>
             <a href="#gallery-panel"><span class="ico">📸</span> <span data-i18n="gallery">Gallery</span></a>
+            <a href="#invoice-panel"><span class="ico">🧾</span> <span data-i18n="invoiceTitle">Invoice Generator</span></a>
           </nav>
           <div class="sidebar-foot">
             <a class="btn btn-ghost btn-sm" href="/" target="_blank" rel="noopener" data-i18n="viewSite">View Site</a>
@@ -293,6 +295,43 @@
             <a class="btn btn-ghost" href="/" target="_blank" rel="noopener" data-i18n="viewSite">View Site</a>
             <p data-i18n="publishNote">Publishing updates your live site content. It does not change the source code.</p>
           </div>
+
+          <!-- INVOICE GENERATOR -->
+          <section class="panel" id="invoice-panel">
+            <div class="panel-head"><span class="ico">🧾</span><h3 data-i18n="invoiceTitle">Invoice Generator</h3></div>
+            <p class="login-hint" style="text-align:left" data-i18n="invoiceHint">Create a branded invoice for a customer order. Fill in the details, then download a PDF to email or print. Tax is pre-set for Volusia County and can be adjusted per job.</p>
+
+            <div class="invoice-form">
+              <div class="panel-head" style="margin-top:6px"><span class="ico">👤</span><h3 data-i18n="invoiceBillTo">Bill To</h3></div>
+              <div class="field-grid">
+                <div class="field"><label class="field-label"><span data-i18n="invCustName">Customer name</span></label><input id="inv-cust-name"></div>
+                <div class="field"><label class="field-label"><span data-i18n="invCustEmail">Customer email</span></label><input id="inv-cust-email" type="email"></div>
+              </div>
+              <div class="field-grid">
+                <div class="field"><label class="field-label"><span data-i18n="invCustPhone">Customer phone</span></label><input id="inv-cust-phone"></div>
+                <div class="field"><label class="field-label"><span data-i18n="invDate">Invoice date</span></label><input id="inv-date" type="date"></div>
+              </div>
+
+              <div class="panel-head" style="margin-top:14px"><span class="ico">📋</span><h3 data-i18n="invoiceItems">Order Items</h3><span class="spacer"></span><button class="btn btn-lime btn-sm" id="inv-add-item" type="button" data-i18n="invAddItem">Add Item</button></div>
+              <div id="inv-items"></div>
+
+              <div class="field-grid" style="margin-top:14px">
+                <div class="field"><label class="field-label"><span data-i18n="invTaxRate">Tax rate (%)</span></label><input id="inv-tax-rate" type="number" step="0.001" value="6.5"></div>
+                <div class="field"><label class="field-label"><span data-i18n="invNotes">Notes (optional)</span></label><input id="inv-notes" data-i18n-ph="invNotesPh" placeholder="Thank you for your order!"></div>
+              </div>
+
+              <div class="invoice-totals" id="inv-totals">
+                <div class="inv-total-row"><span data-i18n="invSubtotal">Subtotal</span><strong id="inv-subtotal">$0.00</strong></div>
+                <div class="inv-total-row"><span><span data-i18n="invTax">Tax</span> (<span id="inv-tax-pct">6.5</span>%)</span><strong id="inv-tax-amt">$0.00</strong></div>
+                <div class="inv-total-row inv-grand"><span data-i18n="invTotalDue">Total Due</span><strong id="inv-total">$0.00</strong></div>
+              </div>
+
+              <div class="invoice-actions">
+                <button class="btn btn-primary" id="inv-generate" type="button" data-i18n="invDownloadPdf">Download PDF Invoice</button>
+              </div>
+              <p class="inv-stripe-note" id="inv-pay-note" data-i18n="invPayNote">The invoice shows your Zelle and Cash App details so customers can pay you directly. Update those anytime in the Checkout panel.</p>
+            </div>
+          </section>
         </main>
       </div>
     </div>

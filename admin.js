@@ -469,3 +469,215 @@ function setStatus(key, cls) {
 function slug(value) { return String(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""); }
 function escapeHtml(value = "") { return String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 function escapeAttr(value = "") { return escapeHtml(value); }
+
+/* ========================================================================
+   INVOICE GENERATOR
+   Branded PDF invoices with FL (Volusia 6.5%) tax and Zelle/Cash App payment.
+   ======================================================================== */
+let invItems = [];
+
+function invMoney(n) { return "$" + (Math.round(n * 100) / 100).toFixed(2); }
+
+function renderInvItems() {
+  const wrap = byId("inv-items");
+  if (!wrap) return;
+  if (!invItems.length) invItems.push({ desc: "", qty: 1, price: 0 });
+  wrap.innerHTML = invItems.map((it, i) => `
+    <div class="inv-item-row">
+      <input class="inv-desc" data-inv="${i}" data-f="desc" data-i18n-ph="invItemDesc" placeholder="Item description" value="${escapeAttr(it.desc || "")}">
+      <input class="inv-qty" data-inv="${i}" data-f="qty" type="number" min="0" step="1" value="${escapeAttr(String(it.qty ?? 1))}">
+      <input class="inv-price" data-inv="${i}" data-f="price" type="number" min="0" step="0.01" value="${escapeAttr(String(it.price ?? 0))}">
+      <span class="inv-line-total">${invMoney((Number(it.qty) || 0) * (Number(it.price) || 0))}</span>
+      <button class="btn btn-danger btn-sm inv-del" data-inv-del="${i}" type="button">×</button>
+    </div>`).join("");
+  wrap.querySelectorAll("[data-inv]").forEach((inp) => {
+    inp.addEventListener("input", () => {
+      const i = Number(inp.dataset.inv);
+      const f = inp.dataset.f;
+      invItems[i][f] = f === "desc" ? inp.value : Number(inp.value);
+      invTotals();
+      // update just the line total without full re-render (keeps focus)
+      const row = inp.closest(".inv-item-row");
+      const lt = row.querySelector(".inv-line-total");
+      if (lt) lt.textContent = invMoney((Number(invItems[i].qty) || 0) * (Number(invItems[i].price) || 0));
+    });
+  });
+  wrap.querySelectorAll("[data-inv-del]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      invItems.splice(Number(btn.dataset.invDel), 1);
+      if (!invItems.length) invItems.push({ desc: "", qty: 1, price: 0 });
+      renderInvItems(); invTotals();
+    });
+  });
+  invTotals();
+}
+
+function invTotals() {
+  const subtotal = invItems.reduce((s, it) => s + (Number(it.qty) || 0) * (Number(it.price) || 0), 0);
+  const rate = Number(byId("inv-tax-rate").value) || 0;
+  const tax = subtotal * (rate / 100);
+  const total = subtotal + tax;
+  byId("inv-subtotal").textContent = invMoney(subtotal);
+  byId("inv-tax-amt").textContent = invMoney(tax);
+  byId("inv-tax-pct").textContent = rate;
+  byId("inv-total").textContent = invMoney(total);
+  return { subtotal, tax, total, rate };
+}
+
+function nextInvoiceNumber() {
+  const d = new Date();
+  const ymd = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+  const seq = String(Math.floor(Math.random() * 900) + 100);
+  return `INV-${ymd}-${seq}`;
+}
+
+async function loadLogoDataUrl() {
+  // Fetch the logo and convert to a data URL for embedding in the PDF.
+  try {
+    const src = (content.business && content.business.logoImage) || "/assets/sweet-salao-logo.png";
+    const res = await fetch(src);
+    const blob = await res.blob();
+    return await new Promise((resolve) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = () => resolve(null);
+      r.readAsDataURL(blob);
+    });
+  } catch (e) { return null; }
+}
+
+async function generateInvoicePdf() {
+  const { jsPDF } = window.jspdf || {};
+  if (!jsPDF) { setStatus("invNoPdfLib", "unsaved"); return; }
+
+  const b = content.business || {};
+  const o = content.ordering || {};
+  const totals = invTotals();
+  const invNo = nextInvoiceNumber();
+  const dateVal = byId("inv-date").value || new Date().toISOString().slice(0, 10);
+
+  const doc = new jsPDF({ unit: "pt", format: "letter" });
+  const W = doc.internal.pageSize.getWidth();
+  const M = 48;            // margin
+  const ink = [28, 22, 38];
+  const gold = [197, 164, 75];
+  const soft = [110, 110, 120];
+  let y = M;
+
+  // --- Logo (centered-left) ---
+  const logo = await loadLogoDataUrl();
+  if (logo) {
+    try { doc.addImage(logo, "PNG", M, y, 120, 92); } catch (e) {}
+  }
+
+  // --- Business block (right side) ---
+  doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.setTextColor(...ink);
+  doc.text(b.name || "Sweet & Salao", W - M, y + 16, { align: "right" });
+  doc.setFont("helvetica", "normal"); doc.setFontSize(9.5); doc.setTextColor(...soft);
+  const addr = b.address || {};
+  const bizLines = [
+    addr.street || "",
+    addr.cityStateZip || (b.location || ""),
+    b.phone || "",
+    b.email || "",
+    "sweetnsalao.com"
+  ].filter(Boolean);
+  let by = y + 32;
+  bizLines.forEach((ln) => { doc.text(String(ln), W - M, by, { align: "right" }); by += 13; });
+
+  y = Math.max(y + 100, by + 8);
+
+  // --- INVOICE title bar ---
+  doc.setDrawColor(...gold); doc.setLineWidth(2);
+  doc.line(M, y, W - M, y);
+  y += 26;
+  doc.setFont("helvetica", "bold"); doc.setFontSize(22); doc.setTextColor(...ink);
+  doc.text("INVOICE", M, y);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...soft);
+  doc.text(`Invoice #: ${invNo}`, W - M, y - 10, { align: "right" });
+  doc.text(`Date: ${dateVal}`, W - M, y + 4, { align: "right" });
+  y += 28;
+
+  // --- Bill To ---
+  doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(...ink);
+  doc.text("BILL TO", M, y);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10.5); doc.setTextColor(...ink);
+  y += 15;
+  const billLines = [
+    byId("inv-cust-name").value || "Customer",
+    byId("inv-cust-phone").value || "",
+    byId("inv-cust-email").value || ""
+  ].filter(Boolean);
+  billLines.forEach((ln) => { doc.text(String(ln), M, y); y += 14; });
+  y += 10;
+
+  // --- Items table header ---
+  const colDesc = M, colQty = W - M - 200, colPrice = W - M - 110, colTot = W - M;
+  doc.setFillColor(28, 22, 38); doc.rect(M, y - 12, W - 2 * M, 22, "F");
+  doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); doc.setTextColor(255, 255, 255);
+  doc.text("DESCRIPTION", colDesc + 8, y + 3);
+  doc.text("QTY", colQty, y + 3, { align: "right" });
+  doc.text("PRICE", colPrice, y + 3, { align: "right" });
+  doc.text("TOTAL", colTot - 6, y + 3, { align: "right" });
+  y += 24;
+
+  // --- Items rows ---
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...ink);
+  invItems.filter((it) => (it.desc || "").trim() || Number(it.price)).forEach((it) => {
+    const qty = Number(it.qty) || 0, price = Number(it.price) || 0, lt = qty * price;
+    const descLines = doc.splitTextToSize(String(it.desc || ""), colQty - colDesc - 20);
+    doc.text(descLines, colDesc + 8, y);
+    doc.text(String(qty), colQty, y, { align: "right" });
+    doc.text(invMoney(price), colPrice, y, { align: "right" });
+    doc.text(invMoney(lt), colTot - 6, y, { align: "right" });
+    y += Math.max(16, descLines.length * 13);
+    doc.setDrawColor(230, 230, 232); doc.setLineWidth(0.5); doc.line(M, y - 6, W - M, y - 6);
+  });
+  y += 8;
+
+  // --- Totals ---
+  const tx = W - M - 200;
+  doc.setFontSize(10.5); doc.setTextColor(...ink);
+  doc.text("Subtotal", tx, y); doc.text(invMoney(totals.subtotal), colTot - 6, y, { align: "right" }); y += 16;
+  doc.text(`Tax (${totals.rate}%)`, tx, y); doc.text(invMoney(totals.tax), colTot - 6, y, { align: "right" }); y += 18;
+  doc.setDrawColor(...gold); doc.setLineWidth(1.5); doc.line(tx, y - 8, colTot, y - 8);
+  doc.setFont("helvetica", "bold"); doc.setFontSize(13);
+  doc.text("TOTAL DUE", tx, y + 6); doc.text(invMoney(totals.total), colTot - 6, y + 6, { align: "right" });
+  y += 36;
+
+  // --- Payment instructions (Zelle / Cash App) ---
+  doc.setFillColor(247, 243, 235); doc.rect(M, y, W - 2 * M, 76, "F");
+  doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(...ink);
+  doc.text("How to Pay", M + 12, y + 20);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...ink);
+  const zelle = o.zellePhone || o.zelleHandle || "";
+  const cashapp = o.cashAppHandle || "";
+  let py = y + 38;
+  if (zelle) { doc.text(`Zelle:  ${zelle}`, M + 12, py); py += 15; }
+  if (cashapp) { doc.text(`Cash App:  ${cashapp}`, M + 12, py); py += 15; }
+  doc.setTextColor(...soft); doc.setFontSize(9);
+  doc.text("Please include your name and invoice number with payment.", M + 12, y + 66);
+  y += 92;
+
+  // --- Notes / footer ---
+  const notes = byId("inv-notes").value;
+  if (notes) {
+    doc.setFont("helvetica", "italic"); doc.setFontSize(10); doc.setTextColor(...ink);
+    doc.text(doc.splitTextToSize(notes, W - 2 * M), M, y); y += 22;
+  }
+  doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.setTextColor(...soft);
+  doc.text("Thank you for supporting Sweet & Salao by Chef Carmen LLC.", W / 2, doc.internal.pageSize.getHeight() - 36, { align: "center" });
+
+  const safeCust = (byId("inv-cust-name").value || "customer").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+  doc.save(`${invNo}-${safeCust}.pdf`);
+  setStatus("invSaved", "saved");
+}
+
+// Wire up invoice events (guarded so it only runs if the panel exists)
+if (byId("invoice-panel")) {
+  byId("inv-add-item").addEventListener("click", () => { invItems.push({ desc: "", qty: 1, price: 0 }); renderInvItems(); });
+  byId("inv-tax-rate").addEventListener("input", invTotals);
+  byId("inv-generate").addEventListener("click", generateInvoicePdf);
+  if (byId("inv-date")) byId("inv-date").value = new Date().toISOString().slice(0, 10);
+  renderInvItems();
+}
