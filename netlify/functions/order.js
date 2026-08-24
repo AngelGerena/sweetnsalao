@@ -13,16 +13,22 @@ export default async (request) => {
     return { id: product.id, name: product.name, price: Number(product.price), quantity };
   }).filter(Boolean) : [];
   if (!items.length) return json({ error: "No available menu items were submitted." }, 400);
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // Florida state + Volusia County sales tax. Recomputed server-side (never trust the
+  // client total) and kept in sync with TAX_RATE in script.js.
+  const TAX_RATE = 0.065;
+  const round2 = (n) => Math.round(n * 100) / 100;
+  const subtotal = round2(items.reduce((sum, item) => sum + item.price * item.quantity, 0));
+  const tax = round2(subtotal * TAX_RATE);
+  const total = round2(subtotal + tax);
   const customer = sanitizeCustomer(body.customer);
   if (!customer.name || !customer.phone) return json({ error: "Name and phone are required." }, 400);
   const fulfillment = body.fulfillment === "doordash" ? "doordash" : "pickup";
   const payment = ["zelle", "cashapp"].includes(body.payment) ? body.payment : null;
 
-  const order = await writeOrder({ customer, fulfillment, payment, items, total });
+  const order = await writeOrder({ customer, fulfillment, payment, items, subtotal, tax, total });
 
   // Fire notifications (email + SMS) without blocking the customer response.
-  const notify = buildNotification({ order, customer, fulfillment, payment, items, total });
+  const notify = buildNotification({ order, customer, fulfillment, payment, items, subtotal, tax, total });
   await Promise.allSettled([
     sendEmail(notify),
     sendSms(notify)
@@ -37,7 +43,7 @@ export default async (request) => {
   });
 };
 
-function buildNotification({ order, customer, fulfillment, payment, items, total }) {
+function buildNotification({ order, customer, fulfillment, payment, items, subtotal, tax, total }) {
   const lines = items.map((i) => `  ${i.quantity}x ${i.name} ($${(i.price * i.quantity).toFixed(2)})`).join("\n");
   const payLabel = payment === "zelle" ? "ZELLE" : payment === "cashapp" ? "CASH APP" : "Not specified";
   const method = fulfillment === "doordash" ? "DoorDash delivery" : "PICKUP at window";
@@ -45,10 +51,12 @@ function buildNotification({ order, customer, fulfillment, payment, items, total
   const text =
 `NEW SWEET & SALAO ORDER #${shortId}
 ${method}
-PAYMENT: ${payLabel}
+PAYMENT METHOD SELECTED (confirm received before cooking): ${payLabel}
 
 ${lines}
 
+SUBTOTAL: $${Number(subtotal).toFixed(2)}
+SALES TAX (6.5%): $${Number(tax).toFixed(2)}
 TOTAL: $${total.toFixed(2)}
 
 Customer: ${customer.name}
