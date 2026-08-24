@@ -56,6 +56,28 @@ export async function writeOrder(order) {
   return payload;
 }
 
+// Read stored orders, newest first. Used by the admin "Recent Orders" dashboard.
+export async function readOrders(limit = 100) {
+  const byNewest = (a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
+  try {
+    const store = getStore("sweet-salao-orders");
+    const { blobs = [] } = await store.list({ prefix: ORDER_PREFIX });
+    const orders = [];
+    for (const b of blobs) {
+      const o = await store.get(b.key, { type: "json" });
+      if (o) orders.push(o);
+    }
+    return orders.sort(byNewest).slice(0, limit);
+  } catch {
+    try {
+      const orders = JSON.parse(await fs.readFile(ORDERS_FILE, "utf8"));
+      return (Array.isArray(orders) ? orders : []).sort(byNewest).slice(0, limit);
+    } catch {
+      return [];
+    }
+  }
+}
+
 export async function writeMedia({ key, bytes, type }) {
   try {
     const store = getStore("sweet-salao-media");
