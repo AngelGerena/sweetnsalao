@@ -56,7 +56,6 @@ byId("login-form").addEventListener("submit", async (event) => {
     byId("admin-shell").classList.remove("hidden");
     applyLang();
     await loadContent();
-    await loadOrders();
   } catch (error) {
     status.textContent = error.message;
     status.classList.add("err");
@@ -68,11 +67,29 @@ byId("logout-button").addEventListener("click", async () => {
   location.reload();
 });
 
-/* ---------- Sidebar active state ---------- */
+/* ---------- Sidebar navigation + Orders view switching ----------
+   "Recent Orders" is a separate view: clicking it in the sidebar shows only the
+   orders panel and hides the editor. Any other section returns to the editor. */
+function showView(view) {
+  const main = document.querySelector(".main");
+  if (!main) return;
+  const isOrders = view === "orders";
+  byId("orders-panel").classList.toggle("hidden", !isOrders);
+  main.querySelectorAll(".page-head, .panel:not(#orders-panel), .publish-bar")
+    .forEach((el) => el.classList.toggle("hidden", isOrders));
+  if (isOrders) loadOrders();
+}
+
 document.querySelectorAll(".sidebar nav a").forEach((link) => {
-  link.addEventListener("click", () => {
+  link.addEventListener("click", (event) => {
     document.querySelectorAll(".sidebar nav a").forEach((a) => a.classList.remove("active"));
     link.classList.add("active");
+    if ((link.getAttribute("href") || "") === "#orders-panel") {
+      event.preventDefault();
+      showView("orders");
+    } else {
+      showView("editor");
+    }
   });
 });
 
@@ -139,6 +156,7 @@ function renderOrders(orders) {
           <span class="order-id">#${shortId}</span>
           <span class="order-when">${escapeHtml(ordFmtDateTime(o.createdAt))}</span>
           <span class="order-pay pay-${o.payment || "none"}">${escapeHtml(pay)}</span>
+          <button class="order-del" type="button" data-del="${escapeAttr(o.id || "")}" title="${escapeAttr(t("ordersDelete"))}" aria-label="${escapeAttr(t("ordersDelete"))}">🗑️</button>
         </div>
         <div class="order-cust"><strong>${escapeHtml(o.customer?.name || "—")}</strong>${phone ? ` · <a href="tel:${escapeAttr(telHref)}">${escapeHtml(phone)}</a>` : ""} · ${escapeHtml(method)}</div>
         ${o.customer?.notes ? `<div class="order-notes">📝 ${escapeHtml(o.customer.notes)}</div>` : ""}
@@ -149,6 +167,23 @@ function renderOrders(orders) {
         </div>
       </div>`;
   }).join("");
+
+  wrap.querySelectorAll("[data-del]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.del;
+      if (!id || !confirm(t("ordersDeleteConfirm"))) return;
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/orders?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+        if (!res.ok) throw new Error("delete failed");
+        lastOrders = lastOrders.filter((o) => o.id !== id);
+        renderOrders(lastOrders);
+      } catch {
+        btn.disabled = false;
+        alert(t("ordersDeleteError"));
+      }
+    });
+  });
 }
 
 if (byId("orders-refresh")) byId("orders-refresh").addEventListener("click", loadOrders);
