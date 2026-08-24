@@ -52,7 +52,8 @@
       <div class="shell">
         <aside class="sidebar">
           <nav>
-            <a href="#availability" class="active"><span class="ico">🚦</span> <span data-i18n="availability">Availability</span></a>
+            <a href="#orders-panel" class="active"><span class="ico">📥</span> <span data-i18n="ordersNav">Recent Orders</span></a>
+            <a href="#availability"><span class="ico">🚦</span> <span data-i18n="availability">Availability</span></a>
             <a href="#business"><span class="ico">🏪</span> <span data-i18n="business">Business</span></a>
             <a href="#menu-admin"><span class="ico">🍽️</span> <span data-i18n="menu">Menu</span></a>
             <a href="#ordering"><span class="ico">💳</span> <span data-i18n="checkout">Checkout</span></a>
@@ -74,6 +75,13 @@
             <h2 data-i18n="siteEditor">Site Editor</h2>
             <p data-i18n="siteEditorSub">Update your menu, prices, photos, and business info. Changes go live when you publish.</p>
           </div>
+
+          <!-- RECENT ORDERS -->
+          <section class="panel" id="orders-panel">
+            <div class="panel-head"><span class="ico">📥</span><h3 data-i18n="ordersTitle">Recent Orders</h3><span class="spacer"></span><button class="btn btn-lime btn-sm" id="orders-refresh" type="button" data-i18n="ordersRefresh">Refresh</button></div>
+            <p class="login-hint" style="text-align:left" data-i18n="ordersHint">Every order placed on your site is saved here automatically — newest first. This is your record; it does not require email or SMS setup. Always confirm the customer's Zelle or Cash App payment arrived before cooking.</p>
+            <div id="orders-list"><p class="fine-print" data-i18n="ordersLoading">Loading orders…</p></div>
+          </section>
 
           <!-- AVAILABILITY -->
           <section class="panel" id="availability">

@@ -31,6 +31,7 @@ document.querySelectorAll(".lang-toggle button").forEach((b) => {
       renderProducts();
       renderGalleryEditor();
       renderReviewsEditor();
+      renderOrders(lastOrders);
     }
   });
 });
@@ -55,6 +56,7 @@ byId("login-form").addEventListener("submit", async (event) => {
     byId("admin-shell").classList.remove("hidden");
     applyLang();
     await loadContent();
+    await loadOrders();
   } catch (error) {
     status.textContent = error.message;
     status.classList.add("err");
@@ -89,6 +91,67 @@ async function loadContent() {
   renderReviewsEditor();
   setStatus("readyToEdit", "saved");
 }
+
+/* ========================================================================
+   RECENT ORDERS  (read-only dashboard of orders saved on the server)
+   ======================================================================== */
+let lastOrders = [];
+
+async function loadOrders() {
+  const wrap = byId("orders-list");
+  if (!wrap) return;
+  wrap.innerHTML = `<p class="fine-print">${t("ordersLoading")}</p>`;
+  try {
+    const res = await fetch("/api/orders", { headers: { Accept: "application/json" } });
+    if (!res.ok) throw new Error("load failed");
+    const data = await res.json();
+    lastOrders = Array.isArray(data.orders) ? data.orders : [];
+    renderOrders(lastOrders);
+  } catch {
+    wrap.innerHTML = `<p class="fine-print err">${t("ordersError")}</p>`;
+  }
+}
+
+function ordFmtDateTime(iso) {
+  try {
+    return new Date(iso).toLocaleString(lang === "es" ? "es-US" : "en-US",
+      { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  } catch { return String(iso || ""); }
+}
+
+function renderOrders(orders) {
+  const wrap = byId("orders-list");
+  if (!wrap) return;
+  if (!orders || !orders.length) { wrap.innerHTML = `<p class="fine-print">${t("ordersEmpty")}</p>`; return; }
+  wrap.innerHTML = orders.map((o) => {
+    const shortId = String(o.id || "").slice(-6).toUpperCase();
+    const pay = o.payment === "zelle" ? "Zelle" : o.payment === "cashapp" ? "Cash App" : t("ordersNoPay");
+    const method = o.fulfillment === "doordash" ? "DoorDash" : t("ordersPickup");
+    const phone = String(o.customer?.phone || "");
+    const telHref = phone.replace(/[^0-9+]/g, "");
+    const items = (o.items || []).map((i) =>
+      `<li><span>${Number(i.quantity) || 0}× ${escapeHtml(i.name || "")}</span><span class="ord-linetotal">${invMoney((Number(i.price) || 0) * (Number(i.quantity) || 0))}</span></li>`).join("");
+    const sub = Number(o.subtotal), tax = Number(o.tax);
+    const hasBreakdown = Number.isFinite(sub) && Number.isFinite(tax);
+    return `
+      <div class="order-card">
+        <div class="order-top">
+          <span class="order-id">#${shortId}</span>
+          <span class="order-when">${escapeHtml(ordFmtDateTime(o.createdAt))}</span>
+          <span class="order-pay pay-${o.payment || "none"}">${escapeHtml(pay)}</span>
+        </div>
+        <div class="order-cust"><strong>${escapeHtml(o.customer?.name || "—")}</strong>${phone ? ` · <a href="tel:${escapeAttr(telHref)}">${escapeHtml(phone)}</a>` : ""} · ${escapeHtml(method)}</div>
+        ${o.customer?.notes ? `<div class="order-notes">📝 ${escapeHtml(o.customer.notes)}</div>` : ""}
+        <ul class="order-items">${items}</ul>
+        <div class="order-totals">
+          ${hasBreakdown ? `<span>${t("invSubtotal")}: ${invMoney(sub)}</span><span>${t("salesTax")}: ${invMoney(tax)}</span>` : ""}
+          <strong>${t("total")}: ${invMoney(Number(o.total) || 0)}</strong>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+if (byId("orders-refresh")) byId("orders-refresh").addEventListener("click", loadOrders);
 
 function bindFields() {
   document.querySelectorAll("[data-path]").forEach((field) => {

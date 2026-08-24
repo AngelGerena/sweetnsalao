@@ -2,7 +2,9 @@ export const defaultContent = {
   business: {
     name: "Sweet & Salao",
     tagline: "Puerto Rican sweets, savory plates, seafood cups, and street-food favorites.",
+    tagline_es: "Dulces puertorriqueños, platos salados, vasos de mariscos y favoritos de la comida callejera.",
     intro: "Sweet & Salao by Chef Carmen LLC serves bold Puerto Rican plates, loaded fries, pastelillos, seafood cups, sweets, and drinks straight from the truck.",
+    intro_es: "Sweet & Salao by Chef Carmen LLC sirve intensos platos puertorriqueños, papas locas, pastelillos, vasos de mariscos, dulces y bebidas directo del food truck.",
     phone: "386-215-6720 / 386-215-6381",
     email: "sweetandsalaobychefcarmen@gmail.com",
     location: "Deltona, FL and surrounding areas",
@@ -49,8 +51,11 @@ export const defaultContent = {
   },
   sections: {
     featuredTitle: "Straight from the truck",
+    featuredTitle_es: "Directo del food truck",
     storyTitle: "Sweet, salao, and made by Chef Carmen",
-    storyText: "From pastelillos and pinchos to churrasco, seafood cups, flan, and natural juices, the truck brings a full comfort-food menu to Deltona and nearby events. Cooked with love, seasoned with faith."
+    storyTitle_es: "Dulce, salao y hecho por Chef Carmen",
+    storyText: "From pastelillos and pinchos to churrasco, seafood cups, flan, and natural juices, the truck brings a full comfort-food menu to Deltona and nearby events. Cooked with love, seasoned with faith.",
+    storyText_es: "Desde pastelillos y pinchos hasta churrasco, vasos de mariscos, flan y jugos naturales, el food truck lleva un menú completo de comida casera a Deltona y eventos cercanos. Cocinado con amor, sazonado con fe."
   },
   reviews: {
     title: "What our guests are saying",

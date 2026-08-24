@@ -3,6 +3,8 @@ import { i18n, getLang, setLang } from "./i18n.js";
 
 let lang = getLang();
 const t = (key) => (i18n[lang] && i18n[lang][key]) || i18n.en[key] || key;
+// Pick the Spanish variant of a content string when the site is in Spanish and one exists.
+const pick = (en, es) => (lang === "es" && es) ? es : (en || es || "");
 
 let content = structuredClone(defaultContent);
 let visibleCategory = "All";
@@ -48,14 +50,11 @@ function renderSite() {
   byId("nav-logo").src = content.business.logoImage;
   byId("hero-logo").src = content.business.logoImage;
   byId("business-name").textContent = content.business.name;
-  byId("tagline").textContent = content.business.tagline;
   const hoursEl = byId("hours");
   if (hoursEl) hoursEl.textContent = content.business.hours || "";
   byId("location").textContent = content.business.location;
   byId("location-2").textContent = content.business.location;
-  byId("featured-title").textContent = content.sections.featuredTitle;
-  byId("story-title").textContent = content.sections.storyTitle;
-  byId("story-text").textContent = content.sections.storyText;
+  renderLangText();
   byId("zelle-handle").textContent = content.ordering.zelleHandle;
   byId("cashapp-handle").textContent = content.ordering.cashAppHandle;
   byId("delivery-note").textContent = content.ordering.pickupInstructions;
@@ -550,6 +549,8 @@ function renderCart() {
       </div>
     </div>
   `).join("") : `<p class="fine-print">${t("cartEmpty")}</p>`;
+  byId("cart-subtotal").textContent = money(subtotal());
+  byId("cart-tax").textContent = money(taxAmount());
   byId("cart-total").textContent = money(total());
 
   const count = rows.reduce((sum, r) => sum + r.quantity, 0);
@@ -572,8 +573,18 @@ function decrease(id) {
   renderCart();
 }
 
+// Florida state + Volusia County sales tax, applied to every order. Keep in sync
+// with TAX_RATE in netlify/functions/order.js so the site and the truck agree.
+const TAX_RATE = 0.065;
+const round2 = (n) => Math.round(n * 100) / 100;
+function subtotal() {
+  return round2([...cart.values()].reduce((sum, row) => sum + Number(row.product.price) * row.quantity, 0));
+}
+function taxAmount() {
+  return round2(subtotal() * TAX_RATE);
+}
 function total() {
-  return [...cart.values()].reduce((sum, row) => sum + Number(row.product.price) * row.quantity, 0);
+  return round2(subtotal() + taxAmount());
 }
 
 function isOrderable(item) {
@@ -620,8 +631,10 @@ function buildOrderText({ name, phone, notes, payment, shortId }) {
   return (
 `Hi Sweet & Salao! I'd like to place a PICKUP order${shortId ? ` (#${shortId})` : ""}:\n\n` +
 `${lines}\n\n` +
+`Subtotal: $${subtotal().toFixed(2)}\n` +
+`Sales tax (6.5%): $${taxAmount().toFixed(2)}\n` +
 `Total: $${total().toFixed(2)}\n` +
-`Paying by: ${payLabel}\n\n` +
+`Paying by: ${payLabel} — please confirm you received my payment before cooking\n\n` +
 `Name: ${name}\n` +
 `Phone: ${phone}` +
 `${notes ? `\nNotes: ${notes}` : ""}`
@@ -643,7 +656,7 @@ byId("order-form").addEventListener("submit", async (event) => {
   const formData = new FormData(event.target);
   const data = Object.fromEntries(formData.entries());
   const payment = data.payment === "cashapp" ? "cashapp" : "zelle";
-  const payload = { customer: { name: data.name, phone: data.phone, notes: data.notes }, fulfillment: "pickup", payment, items, total: total() };
+  const payload = { customer: { name: data.name, phone: data.phone, notes: data.notes }, fulfillment: "pickup", payment, items, subtotal: subtotal(), tax: taxAmount(), total: total() };
 
   status.textContent = "Placing order…";
   let shortId = "";
@@ -714,6 +727,15 @@ function escapeHtml(value = "") {
 function escapeAttr(value = "") { return escapeHtml(value); }
 
 /* ---------- Language toggle ---------- */
+// Language-dependent content strings that come from `content` (not static i18n keys).
+// Re-run this whenever the language changes so the hero subheading and story translate.
+function renderLangText() {
+  byId("tagline").textContent = pick(content.business.tagline, content.business.tagline_es);
+  byId("featured-title").textContent = pick(content.sections.featuredTitle, content.sections.featuredTitle_es);
+  byId("story-title").textContent = pick(content.sections.storyTitle, content.sections.storyTitle_es);
+  byId("story-text").textContent = pick(content.sections.storyText, content.sections.storyText_es);
+}
+
 function applyLang() {
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-i18n]").forEach((el) => {
@@ -733,6 +755,7 @@ document.querySelectorAll("#lang-toggle button").forEach((b) => {
     lang = b.dataset.lang === "es" ? "es" : "en";
     setLang(lang);
     applyLang();
+    renderLangText();
     renderFilters();
     renderMenu();
     renderCart();
