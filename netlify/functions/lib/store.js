@@ -56,6 +56,26 @@ export async function writeOrder(order) {
   return payload;
 }
 
+// Delete one stored order by id (admin "Recent Orders" trash button).
+export async function deleteOrder(id) {
+  if (!id) return false;
+  const key = `${ORDER_PREFIX}${id}`;
+  try {
+    const store = getStore("sweet-salao-orders");
+    await store.delete(key);
+    return true;
+  } catch {
+    try {
+      const orders = JSON.parse(await fs.readFile(ORDERS_FILE, "utf8"));
+      const next = (Array.isArray(orders) ? orders : []).filter((o) => o.id !== id);
+      await fs.writeFile(ORDERS_FILE, JSON.stringify(next, null, 2));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+}
+
 // Read stored orders, newest first. Used by the admin "Recent Orders" dashboard.
 export async function readOrders(limit = 100) {
   const byNewest = (a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
